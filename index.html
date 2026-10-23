@@ -51,7 +51,7 @@
 const provinces=['Almería','Cádiz','Córdoba','Granada','Huelva','Jaén','Málaga','Sevilla'];
 const storage={tasks:'c360_tasks',visits:'c360_visits',contacts:'c360_contacts',issues:'c360_issues'};
 const titles={inicio:'Panel de Andalucía',agenda:'Agenda y tareas',rutas:'Rutas y visitas',contactos:'Personas y contactos',incidencias:'Incidencias',documentos:'Documentos',informes:'Informes',accesibilidad:'Accesibilidad'};
-let chosen='Huelva',large=false,contrast=false;
+let chosen='Málaga',large=false,contrast=false;
 const $=id=>document.getElementById(id);
 const read=k=>{try{return JSON.parse(localStorage.getItem(storage[k])||'[]')}catch(e){return []}};
 const save=(k,a)=>{try{localStorage.setItem(storage[k],JSON.stringify(a));return true}catch(e){alert('No se pudieron guardar los datos. Comprueba el espacio disponible del navegador.');return false}};
