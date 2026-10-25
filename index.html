@@ -920,6 +920,29 @@ function toggleTourism(){
 /* Mapa cartográfico Leaflet/OpenStreetMap y marcadores propios */
 let c360CurrentLocationMarker=null;
 let realMap=null, pointMarkers=[], markMode=false;
+
+/* Conectar el mapa recuperado con los controles originales */
+window.c360SetMap = function(map) {
+  if (!map) return;
+  realMap = map;
+
+  try {
+    drawStoredPoints();
+    renderTourismList();
+    map.invalidateSize(true);
+
+    setTimeout(function() {
+      if (realMap === map) {
+        searchLivePOI('malaga');
+      }
+    }, 700);
+  } catch (error) {
+    mapMessage(
+      'Mapa conectado. Pulsa «Cargar sitios de interés de Málaga» para reintentarlo.'
+    );
+  }
+};
+      
 window.c360GetMap=()=>realMap; // Acceso controlado para herramientas de rutas y capas oficiales.
 function mapMessage(msg){const el=$('mapStatus');if(el)el.textContent=msg}
 function createPinIcon(label='📍'){return L.divIcon({className:'',html:`<div class="map-pin"><span>${label}</span></div>`,iconSize:[30,36],iconAnchor:[15,34],popupAnchor:[0,-32]})}
