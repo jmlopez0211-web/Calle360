@@ -294,7 +294,8 @@
     padding: 13px;
   }
 }
- 
+
+  
 /* CALLE360 — interfaz mejorada */
 .top {
   position: relative;
@@ -416,7 +417,7 @@
   }
 }
 
- 
+  
 /* CALLE360 — mapa protagonista: ajuste definitivo */
 #page-inicio.active {
   display: flex;
@@ -502,7 +503,75 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
- 
+
+
+/* CALLE360: accesibilidad y uso táctil en móvil */
+:root {
+  scroll-behavior: smooth;
+}
+
+button,
+.btn,
+[role="button"],
+.map-key button {
+  touch-action: manipulation;
+}
+
+button:disabled,
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+@media (max-width: 720px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .content,
+  main,
+  .panel,
+  .module,
+  .stat {
+    min-width: 0;
+  }
+
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+  }
+
+  #page-inicio .mapbox {
+    padding: 14px;
+  }
+
+  #page-inicio .map-key button,
+  #page-inicio .module button,
+  #page-inicio .btn {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+  
 </style>
 </head>
 <body>
