@@ -944,43 +944,66 @@ function escapePOI(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','
 function livePOIName(tags){return tags.name||tags['name:es']||tags.brand||tags.operator||'Lugar sin nombre en OpenStreetMap';}
 function clearLivePOI(){livePOIMarkers.forEach(m=>realMap&&realMap.removeLayer(m));livePOIMarkers=[];mapMessage('Se han quitado los resultados de la búsqueda. Tus puntos guardados y la guía turística no se han borrado.');}
 async function searchLivePOI(scope){
- if(!realMap)return;
+ if(!realMap){mapMessage('El mapa aún se está iniciando. Espera unos segundos e inténtalo de nuevo.');return}
  const near=scope==='malaga';
  const bbox='35.80,-7.55,38.75,-1.60';
- const around='(around:35000,36.7213,-4.4214)';
- const areaFilter='["name"]';
- const filter='["tourism"],["historic"],["amenity"],["shop"],["healthcare"],["leisure"],["public_transport"],["emergency"],["office"]';
+ const around='(around:25000,36.7213,-4.4214)';
  const selectors=near
-  ? `[out:json][timeout:35];(nwr${around}["name"]["tourism"];nwr${around}["name"]["historic"];nwr${around}["name"]["heritage"];nwr${around}["name"]["museum"];nwr${around}["name"]["attraction"];nwr${around}["name"]["amenity"];nwr${around}["name"]["shop"];nwr${around}["name"]["healthcare"];nwr${around}["name"]["leisure"];nwr${around}["name"]["public_transport"];nwr${around}["name"]["emergency"];nwr${around}["name"]["office"];);out center tags 700;`
-  : `[out:json][timeout:50];(nwr["name"]["tourism"](${bbox});nwr["name"]["historic"](${bbox});nwr["name"]["heritage"](${bbox});nwr["name"]["museum"](${bbox});nwr["name"]["attraction"](${bbox});nwr["name"]["amenity"](${bbox});nwr["name"]["shop"](${bbox});nwr["name"]["healthcare"](${bbox});nwr["name"]["leisure"](${bbox});nwr["name"]["public_transport"](${bbox});nwr["name"]["emergency"](${bbox});nwr["name"]["office"](${bbox}););out center tags 1500;`;
+  ? '[out:json][timeout:25];(nwr'+around+'["name"]["tourism"];nwr'+around+'["name"]["historic"];nwr'+around+'["name"]["heritage"];nwr'+around+'["name"]["museum"];nwr'+around+'["name"]["attraction"];nwr'+around+'["name"]["amenity"];nwr'+around+'["name"]["shop"];nwr'+around+'["name"]["healthcare"];nwr'+around+'["name"]["leisure"];nwr'+around+'["name"]["public_transport"];nwr'+around+'["name"]["emergency"];nwr'+around+'["name"]["office"];);out center tags 700;'
+  : '[out:json][timeout:35];(nwr["name"]["tourism"]('+bbox+');nwr["name"]["historic"]('+bbox+');nwr["name"]["heritage"]('+bbox+');nwr["name"]["museum"]('+bbox+');nwr["name"]["attraction"]('+bbox+');nwr["name"]["amenity"]('+bbox+');nwr["name"]["shop"]('+bbox+');nwr["name"]["healthcare"]('+bbox+');nwr["name"]["leisure"]('+bbox+');nwr["name"]["public_transport"]('+bbox+');nwr["name"]["emergency"]('+bbox+');nwr["name"]["office"]('+bbox+'););out center tags 1200;';
  const buttons=[$('loadMalagaPOI'),$('loadAndaluciaPOI')].filter(Boolean);
  buttons.forEach(b=>b.disabled=true);
- mapMessage(near?'Buscando lugares y servicios en el entorno de Málaga…':'Buscando puntos de interés en Andalucía. Esta consulta puede tardar…');
+ mapMessage(near?'Buscando lugares y servicios cerca de Málaga…':'Buscando puntos de interés en Andalucía. Puede tardar un poco…');
+ const endpoints=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://overpass.private.coffee/api/interpreter'];
+ let data=null,lastError=null;
+ for(const endpoint of endpoints){
+  let controller=null,timeoutId=null;
+  try{
+   controller=typeof AbortController!=='undefined'?new AbortController():null;
+   if(controller)timeoutId=setTimeout(()=>controller.abort(),28000);
+   const options={method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8','Accept':'application/json'},body:'data='+encodeURIComponent(selectors),mode:'cors',credentials:'omit'};
+   if(controller)options.signal=controller.signal;
+   const response=await fetch(endpoint,options);
+   if(!response.ok)throw new Error('HTTP '+response.status);
+   const candidate=await response.json();
+   if(!candidate||!Array.isArray(candidate.elements))throw new Error('Respuesta cartográfica no válida');
+   data=candidate;break;
+  }catch(err){lastError=err;if(err&&err.name==='AbortError')lastError=new Error('La consulta ha tardado demasiado')}
+  finally{if(timeoutId)clearTimeout(timeoutId)}
+ }
  try{
-  const response=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:'data='+encodeURIComponent(selectors)});
-  if(!response.ok)throw new Error('Servicio de mapas ocupado ('+response.status+').');
-  const data=await response.json();
-  clearLivePOIMarkersOnly();
-  const seen=new Set();
+  let fromCache=false;
+  if(!data){
+   let cached=null;
+   try{cached=JSON.parse(localStorage.getItem('c360_live_poi_'+(near?'malaga':'andalucia'))||'null')}catch(_){}
+   if(cached&&Array.isArray(cached.elements)&&cached.elements.length){data=cached;fromCache=true}
+   else throw lastError||new Error('Los servidores de mapas no responden');
+  }else{
+   try{localStorage.setItem('c360_live_poi_'+(near?'malaga':'andalucia'),JSON.stringify({elements:data.elements,savedAt:Date.now()}))}catch(_){}
+  }
+  const nextMarkers=[],seen=new Set();
   (data.elements||[]).forEach(el=>{
    const tags=el.tags||{};
-   const lat=el.lat??(el.center&&el.center.lat),lon=el.lon??(el.center&&el.center.lon);
-   if(!Number.isFinite(lat)||!Number.isFinite(lon))return;
+   const lat=Number(el.lat??(el.center&&el.center.lat)),lon=Number(el.lon??(el.center&&el.center.lon));
+   if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)return;
    const name=livePOIName(tags),key=name.toLowerCase()+'|'+lat.toFixed(4)+'|'+lon.toFixed(4);
    if(seen.has(key))return;seen.add(key);
    const type=['tourism','historic','healthcare','emergency','public_transport','shop','leisure','amenity','office'].find(k=>tags[k]);
    const detail=tags.tourism||tags.historic||tags.amenity||tags.shop||tags.healthcare||tags.leisure||tags.public_transport||tags.emergency||tags.office||'punto de interés';
-   const marker=L.marker([lat,lon],{icon:livePOIIcon(tags),title:name,alt:name}).addTo(realMap);
+   const marker=L.marker([lat,lon],{icon:livePOIIcon(tags),title:name,alt:name});
    const address=[tags['addr:street'],tags['addr:housenumber'],tags['addr:city']||tags['addr:town']||tags['addr:village']].filter(Boolean).join(', ');
-   const access=tags.wheelchair?`<br><b>Accesibilidad:</b> ${escapePOI(tags.wheelchair)}`:'';
-   const content=`<b>${escapePOI(name)}</b><br><small>${escapePOI(type||'lugar')} · ${escapePOI(detail)}</small>${address?'<br>'+escapePOI(address):''}${access}<br><small>Datos de OpenStreetMap</small><br><a target="_blank" rel="noopener" href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=18/${lat}/${lon}">Abrir ubicación ↗</a>`;
-   marker.bindPopup(content);livePOIMarkers.push(marker);
+   const access=tags.wheelchair?'<br><b>Accesibilidad:</b> '+escapePOI(tags.wheelchair):'';
+   const content='<b>'+escapePOI(name)+'</b><br><small>'+escapePOI(type||'lugar')+' · '+escapePOI(detail)+'</small>'+(address?'<br>'+escapePOI(address):'')+access+'<br><small>Datos de OpenStreetMap</small><br><a target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/?mlat='+lat+'&mlon='+lon+'#map=18/'+lat+'/'+lon+'">Abrir ubicación ↗</a>';
+   marker.bindPopup(content);nextMarkers.push(marker);
   });
-  if(near){realMap.setView([36.7213,-4.4214],10);}
-  mapMessage(`Encontrados ${livePOIMarkers.length} lugares en OpenStreetMap. Toca un marcador para ver detalles. La cobertura depende de los datos disponibles.`);
+  if(nextMarkers.length===0)throw new Error('La consulta no ha devuelto lugares con coordenadas');
+  clearLivePOIMarkersOnly();
+  nextMarkers.forEach(m=>{m.addTo(realMap);livePOIMarkers.push(m)});
+  if(near)realMap.setView([36.7213,-4.4214],11);
+  mapMessage(fromCache?'El catálogo en directo no responde. Mostrando los últimos lugares guardados en este dispositivo; vuelve a intentarlo para actualizar.':'Encontrados '+livePOIMarkers.length+' lugares. Fuente: OpenStreetMap. Toca un marcador para ver detalles.');
  }catch(err){
-  mapMessage('No se ha podido consultar el catálogo ahora. Comprueba Internet e inténtalo de nuevo; el mapa y tus datos guardados siguen disponibles.');
- }finally{buttons.forEach(b=>b.disabled=false);}
+  mapMessage('No se han podido cargar los sitios de interés. El mapa y tus puntos guardados no se han borrado. Comprueba la conexión e inténtalo de nuevo. Detalle: '+(err&&err.message?err.message:'error de conexión')+'.');
+ }finally{buttons.forEach(b=>b.disabled=false)}
 }
 function clearLivePOIMarkersOnly(){livePOIMarkers.forEach(m=>realMap&&realMap.removeLayer(m));livePOIMarkers=[];}
 
