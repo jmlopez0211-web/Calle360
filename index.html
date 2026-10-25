@@ -574,4 +574,123 @@ $('mobileMenu').addEventListener('click',()=>{let old=$('mobileNav');if(old){old
 selectProvince(chosen);render();
 })();
 </script>
+  <!-- CALLE360 · MEJORA INTEGRAL
+     Añade este bloque UNA SOLA VEZ justo antes de </body> en index.html.
+     Conserva las claves de almacenamiento existentes: c360_tasks, c360_visits,
+     c360_contacts y c360_issues. No sustituye el archivo ni borra datos.
+-->
+<style id="calle360-finish-pack">
+:root{--c360-shadow:0 12px 32px rgba(16,42,67,.08);--c360-mint:#e2f6f2}
+body{background:radial-gradient(ellipse at 85% 0%,#e2f6f2 0,transparent 34%),#f2f6f8}
+.top{position:sticky;top:0;z-index:25;box-shadow:0 4px 18px rgba(16,42,67,.07);backdrop-filter:blur(12px)}
+.content{max-width:1500px;padding:clamp(14px,2.5vw,32px)}
+.panel,.stat,.module{box-shadow:var(--c360-shadow);transition:box-shadow .18s,border-color .18s,transform .18s}
+.panel{border-radius:20px}.panel-head{padding:19px 21px}
+.btn,.field input,.field select,.field textarea{border-radius:12px}
+.btn{min-height:44px}.btn.primary{box-shadow:0 6px 16px rgba(0,168,150,.2)}
+.field input,.field select,.field textarea{min-height:46px}
+.mapbox{background:radial-gradient(ellipse at center,#d9f2ec,#f7fbfa);padding:clamp(14px,3vw,30px)}
+#page-inicio .main-grid{grid-template-columns:minmax(0,1fr);gap:18px}
+#page-inicio .main-grid>.panel:first-child{border:2px solid var(--teal);border-radius:22px;box-shadow:0 12px 34px rgba(16,42,67,.1)}
+#page-inicio .map{max-width:760px;max-height:none;filter:drop-shadow(0 12px 10px rgba(16,42,67,.12))}
+#page-inicio .map-key button{padding:12px;border-radius:12px}
+#page-inicio .module{border-radius:18px;padding:19px}
+#page-inicio .module:hover,.panel:hover{border-color:#9adbd2}
+#page-documentos .c360-doc-toolbar{display:grid;grid-template-columns:1fr 190px;gap:12px}
+.c360-doc-card{padding:16px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+.c360-doc-card:last-child{border-bottom:0}
+.c360-doc-meta{font-size:13px;color:var(--muted);margin:5px 0}
+.c360-doc-link{color:#087f75;font-weight:750}
+.c360-tag{display:inline-block;background:#e2f6f2;color:#087b70;border-radius:99px;padding:4px 9px;font-size:12px;font-weight:750}
+.c360-search{margin:0 19px 14px}
+#c360CsvStatus{font-size:13px;color:var(--muted);margin-top:9px}
+@media(max-width:720px){
+ .top{gap:6px;padding:12px}.content{padding:14px}
+ #page-inicio .map-layout{grid-template-columns:1fr}
+ #page-inicio .map-key{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #page-inicio .map-detail{align-items:stretch;flex-direction:column}
+ #page-documentos .c360-doc-toolbar{grid-template-columns:1fr}
+ .panel-head{padding:15px}.records{padding:14px 15px}
+}
+@media(prefers-reduced-motion:reduce){.panel,.stat,.module,.btn{transition:none!important}}
+</style>
+<script id="calle360-finish-pack-script">
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const provinces=['Almería','Cádiz','Córdoba','Granada','Huelva','Jaén','Málaga','Sevilla'];
+const key='c360_docs';
+const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const readDocs=()=>{try{const v=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(v)?v:[]}catch(_){return[]}};
+const saveDocs=a=>{try{localStorage.setItem(key,JSON.stringify(a));return true}catch(_){alert('No se pudo guardar. El almacenamiento del navegador puede estar lleno.');return false}};
+const makeId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const section=$('page-documentos');
+if(!section||$('c360FinishPackLoaded'))return;
+const marker=document.createElement('meta');marker.id='c360FinishPackLoaded';marker.name='calle360-enhancement';marker.content='1';document.head.appendChild(marker);
+section.innerHTML=`
+ <div class="welcome"><div><h1>Biblioteca documental</h1><p>Organiza documentos, enlaces y referencias de trabajo por provincia.</p></div><span class="pill">Biblioteca local</span></div>
+ <div class="notice">Los registros se guardan en este navegador. No se sincronizan automáticamente con otros dispositivos. Por seguridad, los archivos adjuntos tienen un límite de 400 KB.</div>
+ <div class="panel"><div class="panel-head"><div><h3>Añadir documento</h3><p>Guarda referencias útiles para tu trabajo territorial.</p></div></div>
+ <div class="records"><form id="c360DocForm"><div class="formgrid">
+ <div class="field"><label for="c360DocTitle">Nombre del documento *</label><input id="c360DocTitle" required maxlength="120" placeholder="Ej. Protocolo de visita"></div>
+ <div class="field"><label for="c360DocCategory">Categoría</label><select id="c360DocCategory"><option>General</option><option>Procedimientos</option><option>Formación</option><option>Informes</option><option>Normativa</option><option>Otros</option></select></div>
+ <div class="field"><label for="c360DocProv">Provincia</label><select id="c360DocProv">${provinces.map(p=>`<option>${p}</option>`).join('')}</select></div>
+ <div class="field"><label for="c360DocLink">Enlace web (opcional)</label><input id="c360DocLink" type="url" maxlength="500" placeholder="https://..."></div>
+ <div class="field wide"><label for="c360DocNotes">Descripción o notas</label><textarea id="c360DocNotes" maxlength="1000" placeholder="Información que te ayude a localizarlo"></textarea></div>
+ <div class="field wide"><label for="c360DocFile">Adjuntar archivo opcional (máximo 400 KB)</label><input id="c360DocFile" type="file"><span class="muted">Los adjuntos se almacenan solo en este navegador.</span></div>
+ </div><div class="actions"><button class="btn primary" type="submit">Guardar documento</button><button class="btn" type="reset">Limpiar</button></div></form></div></div>
+ <div class="panel" style="margin-top:16px"><div class="panel-head"><div><h3>Documentos guardados</h3><p>Busca por nombre, categoría, provincia o descripción.</p></div><span class="pill" id="c360DocCount">0 documentos</span></div>
+ <div class="records"><div class="field"><label for="c360DocSearch">Buscar en la biblioteca</label><input id="c360DocSearch" type="search" placeholder="Escribe para filtrar…"></div></div><div class="records" id="c360DocRecords"></div></div>`;
+const form=$('c360DocForm'),file=$('c360DocFile'),search=$('c360DocSearch'),list=$('c360DocRecords');
+function renderDocs(){
+ const all=readDocs(),q=search.value.trim().toLocaleLowerCase('es');
+ $('c360DocCount').textContent=`${all.length} ${all.length===1?'documento':'documentos'}`;
+ const shown=all.slice().reverse().filter(d=>[d.title,d.category,d.province,d.notes,d.fileName].join(' ').toLocaleLowerCase('es').includes(q));
+ list.innerHTML=shown.length?shown.map(d=>`<article class="c360-doc-card"><b>${safe(d.title)}</b><div class="c360-doc-meta"><span class="c360-tag">${safe(d.category)}</span> · ${safe(d.province)} · ${safe(d.createdAt?new Date(d.createdAt).toLocaleDateString('es-ES'):'')}</div>${d.notes?`<p>${safe(d.notes)}</p>`:''}${d.link?`<p><a class="c360-doc-link" href="${safe(d.link)}" target="_blank" rel="noopener noreferrer">Abrir enlace ↗</a></p>`:''}${d.fileData?`<p><a class="c360-doc-link" href="${d.fileData}" download="${safe(d.fileName||d.title)}">Descargar ${safe(d.fileName||'archivo')} ↓</a></p>`:''}<button class="btn" type="button" data-c360-doc-delete="${safe(d.id)}">Eliminar documento</button></article>`).join(''):'<div class="empty">No hay documentos que coincidan con la búsqueda.</div>';
+}
+form.addEventListener('submit',async e=>{
+ e.preventDefault();const f=file.files[0];
+ if(f&&f.size>409600){alert('El archivo supera los 400 KB. Elige uno más pequeño.');return}
+ const link=$('c360DocLink').value.trim();
+ if(link&&!/^https?:\/\//i.test(link)){alert('El enlace debe comenzar por http:// o https://');return}
+ let fileData='';
+ if(f){fileData=await new Promise(resolve=>{const r=new FileReader();r.onload=()=>resolve(String(r.result));r.onerror=()=>resolve('');r.readAsDataURL(f)});if(!fileData){alert('No se pudo leer el archivo adjunto.');return}}
+ const docs=readDocs();docs.push({id:makeId(),title:$('c360DocTitle').value.trim(),category:$('c360DocCategory').value,province:$('c360DocProv').value,link,notes:$('c360DocNotes').value.trim(),fileName:f?f.name:'',fileData,createdAt:new Date().toISOString()});
+ if(saveDocs(docs)){form.reset();$('c360DocProv').value='Málaga';renderDocs()}
+});
+search.addEventListener('input',renderDocs);
+list.addEventListener('click',e=>{const b=e.target.closest('[data-c360-doc-delete]');if(!b)return;if(confirm('¿Eliminar este documento guardado en este navegador?')){if(saveDocs(readDocs().filter(d=>d.id!==b.dataset.c360DocDelete)))renderDocs()}});
+/* Exportación CSV: resumen compatible con Excel/Sheets. No altera los datos guardados. */
+const report=$('page-informes');
+if(report&&!$('c360CsvBtn')){
+ const holder=report.querySelector('.panel .records');
+ if(holder){
+  const btn=document.createElement('button');btn.type='button';btn.id='c360CsvBtn';btn.className='btn';btn.textContent='Descargar resumen CSV';
+  holder.appendChild(btn);const status=document.createElement('p');status.id='c360CsvStatus';status.setAttribute('aria-live','polite');holder.appendChild(status);
+  btn.addEventListener('click',()=>{
+   const readKey=k=>{try{const a=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(a)?a:[]}catch(_){return[]}};
+   const rows=[['Tipo','Nombre','Fecha','Provincia','Estado/Prioridad','Notas'],
+    ...readKey('c360_tasks').map(x=>['Tarea',x.title,x.date,x.province,x.priority,x.notes]),
+    ...readKey('c360_visits').map(x=>['Visita',x.place,x.date,x.province,x.status,x.notes]),
+    ...readKey('c360_contacts').map(x=>['Contacto',x.name,'',x.province,x.role,x.notes]),
+    ...readKey('c360_issues').map(x=>['Incidencia',x.title,'',x.province,(x.status||'')+' / '+(x.priority||''),x.notes]),
+    ...readDocs().map(x=>['Documento',x.title,'',x.province,x.category,x.notes])];
+   const csv='\ufeff'+rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
+   const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='calle360-resumen.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);status.textContent='Resumen CSV preparado para descargar.';
+  });
+ }
+}
+/* Asegura que el inicio de la aplicación sea Málaga, sin cambiar ningún registro existente. */
+const mapPaths=[...document.querySelectorAll('[data-prov]')];
+if(mapPaths.length&& !mapPaths.some(x=>x.classList.contains('selected')&&x.dataset.prov==='Málaga')){
+ const malaga=mapPaths.find(x=>x.dataset.prov==='Málaga');
+ if(malaga){mapPaths.forEach(x=>x.classList.toggle('selected',x===malaga));const name=$('selectedProv'),desc=$('provDesc');if(name)name.textContent='Málaga';if(desc)desc.textContent='Área seleccionada · Málaga, Andalucía';}
+}
+const provList=$('provlist');
+if(provList){provList.querySelectorAll('[data-prov-choice]').forEach(b=>b.classList.toggle('selected',b.dataset.provChoice==='Málaga'));}
+const pageNav=document.querySelector('.nav');
+if(pageNav&&!$('c360FinishPackLoaded')){}
+renderDocs();
+})();
+</script>
+ 
 </body></html>
