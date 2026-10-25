@@ -415,6 +415,93 @@
     padding: 13px;
   }
 }
+
+ 
+/* CALLE360 — mapa protagonista: ajuste definitivo */
+#page-inicio.active {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+#page-inicio .main-grid {
+  order: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+}
+
+#page-inicio .main-grid > .panel:first-child {
+  border: 2px solid #00a896;
+  border-radius: 22px;
+  box-shadow: 0 10px 30px #102a4318;
+}
+
+#page-inicio .mapbox {
+  padding: 24px;
+  background: radial-gradient(ellipse at center, #d9f2ec, #f5faf9);
+}
+
+#page-inicio .map-layout {
+  grid-template-columns: minmax(0, 1fr) 170px;
+  gap: 18px;
+}
+
+#page-inicio .map {
+  width: 100%;
+  max-width: 700px;
+  max-height: none;
+  margin: auto;
+  display: block;
+  filter: drop-shadow(0 10px 8px #102a4318);
+}
+
+#page-inicio .map-key button {
+  padding: 12px;
+  border-radius: 12px;
+}
+
+#page-inicio .stats { order: 2; }
+#page-inicio .section-head { order: 3; }
+#page-inicio .modules { order: 4; }
+
+#page-inicio .module {
+  border-radius: 17px;
+  padding: 18px;
+  transition: transform .2s, border-color .2s;
+}
+
+#page-inicio .module:hover {
+  transform: translateY(-2px);
+  border-color: #00a896;
+}
+
+@media (max-width: 720px) {
+  #page-inicio .map-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #page-inicio .map {
+    max-width: 560px;
+  }
+
+  #page-inicio .map-key {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #page-inicio .map-detail {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #page-inicio .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #page-inicio .modules {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
  
 </style>
 </head>
