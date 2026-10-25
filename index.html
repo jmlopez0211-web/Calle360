@@ -967,7 +967,7 @@ function searchLivePOI(scope){
  places.forEach(p=>{
   const icon=L.divIcon({className:'c360-poi-glow-wrap',html:'<div class="c360-poi-glow" aria-label="'+escapePOI(p[0])+'"><span>'+p[3]+'</span></div>',iconSize:[42,42],iconAnchor:[21,21],popupAnchor:[0,-18]});
   const marker=L.marker([p[1],p[2]],{icon,title:p[0],alt:p[0]}).addTo(realMap);
-  marker.bindPopup('<div style="min-width:170px"><strong style="font-size:14px">'+escapePOI(p[0])+'</strong><br><span>'+escapePOI(p[4])+' · '+(near?'Málaga':'Andalucía')+'</span><br><a target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/?mlat='+p[1]+'&mlon='+p[2]+'#map=17/'+p[1]+'/'+p[2]+'">Abrir ubicación ↗</a></div>');
+  marker.bindPopup('<div style="min-width:170px;max-width:260px"><strong style="font-size:14px">'+escapePOI(p[0])+'</strong><br><span>'+escapePOI(p[4])+' · '+(near?'Málaga':'Andalucía')+'</span><br><a target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/?mlat='+p[1]+'&mlon='+p[2]+'#map=17/'+p[1]+'/'+p[2]+'">Abrir ubicación ↗</a></div>');
   livePOIMarkers.push(marker);
  });
  realMap.setView(near?[36.7213,-4.4214]:[37.3,-4.7],near?13:7);
