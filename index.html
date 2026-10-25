@@ -434,10 +434,14 @@ body.c360-high-contrast .c360-official-cartography{background:#000!important;col
 @media(max-width:600px){.c360-official-cartography{padding:11px}.c360-official-actions{display:grid;grid-template-columns:1fr}.c360-official-actions .btn{width:100%;white-space:normal}.c360-official-head h2{font-size:15px}}
 </style>
 
+
+<style id="c360-poi-glow-fix">
+.c360-poi-glow-wrap{background:transparent!important;border:0!important}.c360-poi-glow{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#fff 0%,#8ffaff 18%,#00d9ff 42%,#176bff 70%,rgba(20,45,255,.15) 100%);border:2px solid #eaffff;box-shadow:0 0 7px #00eaff,0 0 16px #00c8ff,0 0 28px #3d5cff;animation:c360PoiPulse 1.8s ease-in-out infinite}.c360-poi-glow span{font-size:17px;filter:drop-shadow(0 1px 2px #00172b)}@keyframes c360PoiPulse{0%,100%{transform:scale(.92);box-shadow:0 0 7px #00eaff,0 0 16px #00c8ff,0 0 24px #3d5cff}50%{transform:scale(1.08);box-shadow:0 0 12px #00eaff,0 0 24px #00c8ff,0 0 38px #3d5cff}}@media(prefers-reduced-motion:reduce){.c360-poi-glow{animation:none}}
+</style>
 </head><body>
 <a id="c360SkipLink" href="#main" class="c360-skip-link">Saltar al contenido principal</a>
 
-<header class="top"><div class="brandrow"><div class="logo">360</div><div class="brandtitle"><strong>CALLE360ONCE</strong><small>Gestión de calle accesible · Andalucía</small></div>
+<header class="top"><div class="brandrow"><div class="logo">360</div><div class="brandtitle"><strong>CALLE360ONCE</strong><small>Gestión de calle accesible · Málaga</small></div>
 <nav class="modulebar" id="modulebar">
 <button class="active" data-page="inicio"><span>🗺️</span>Mapa Andalucía</button><button data-page="contactos"><span>👥</span>Compañeros</button><button data-page="agenda"><span>🗓️</span>Agenda</button><button data-page="documentos"><span>📁</span>Documentos</button><button data-page="mensajes"><span>✉️</span>Mensajes</button><button data-page="informes"><span>📊</span>Informes</button><button data-page="ayuda"><span>❔</span>Ayuda</button><button data-page="parlanchin"><span>🔊</span>Parlanchín</button><button data-page="accesibilidad"><span>♿</span>Apoyo accesible</button>
 </nav><label class="search">⌕ <input id="globalSearch" placeholder="Buscar municipio, calle, punto…"></label><div id="globalResults" class="global-results" hidden role="listbox" aria-label="Resultados de búsqueda"></div></div></header><div id="c360PwaStatus" role="status" aria-live="polite" style="display:none;margin:8px 12px;padding:10px 12px;border:1px solid #b9dcd7;border-radius:10px;background:#effaf8;color:#124b50;font-size:12px"></div>
@@ -448,7 +452,7 @@ body.c360-high-contrast .c360-official-cartography{background:#000!important;col
 </aside>
 <main id="main" class="center">
 <section class="page active" id="page-inicio">
-<div class="hero"><div><h1>Andalucía, punto a punto</h1><p>Tu territorio de trabajo, compañeros y puntos de venta en una sola vista.</p></div><span class="live">● Málaga seleccionada</span></div>
+<div class="hero"><div><h1>📍 Málaga, punto a punto</h1><p>Sitios de interés iluminados, servicios y puntos de trabajo en el mapa.</p></div><span class="live">● Málaga seleccionada</span></div>
 
 <section class="c360-theme-studio" aria-label="Estudio visual de CALLE360">
 <div class="c360-theme-top"><div><strong>◈ ESTUDIO VISUAL · MULTIVERSO</strong><small class="c360-theme-subtitle">Cambia de universo sin perder tus datos</small></div><button type="button" id="c360ThemeRandom" class="c360-theme-random">✦ Sorpréndeme</button></div>
@@ -943,68 +947,33 @@ function livePOIIcon(tags){
 function escapePOI(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function livePOIName(tags){return tags.name||tags['name:es']||tags.brand||tags.operator||'Lugar sin nombre en OpenStreetMap';}
 function clearLivePOI(){livePOIMarkers.forEach(m=>realMap&&realMap.removeLayer(m));livePOIMarkers=[];mapMessage('Se han quitado los resultados de la búsqueda. Tus puntos guardados y la guía turística no se han borrado.');}
-async function searchLivePOI(scope){
- if(!realMap){mapMessage('El mapa aún se está iniciando. Espera unos segundos e inténtalo de nuevo.');return}
+function searchLivePOI(scope){
+ if(!realMap||!window.L){mapMessage('El mapa aún se está iniciando. Espera unos segundos.');return}
  const near=scope==='malaga';
- const bbox='35.80,-7.55,38.75,-1.60';
- const around='(around:25000,36.7213,-4.4214)';
- const selectors=near
-  ? '[out:json][timeout:25];(nwr'+around+'["name"]["tourism"];nwr'+around+'["name"]["historic"];nwr'+around+'["name"]["heritage"];nwr'+around+'["name"]["museum"];nwr'+around+'["name"]["attraction"];nwr'+around+'["name"]["amenity"];nwr'+around+'["name"]["shop"];nwr'+around+'["name"]["healthcare"];nwr'+around+'["name"]["leisure"];nwr'+around+'["name"]["public_transport"];nwr'+around+'["name"]["emergency"];nwr'+around+'["name"]["office"];);out center tags 700;'
-  : '[out:json][timeout:35];(nwr["name"]["tourism"]('+bbox+');nwr["name"]["historic"]('+bbox+');nwr["name"]["heritage"]('+bbox+');nwr["name"]["museum"]('+bbox+');nwr["name"]["attraction"]('+bbox+');nwr["name"]["amenity"]('+bbox+');nwr["name"]["shop"]('+bbox+');nwr["name"]["healthcare"]('+bbox+');nwr["name"]["leisure"]('+bbox+');nwr["name"]["public_transport"]('+bbox+');nwr["name"]["emergency"]('+bbox+');nwr["name"]["office"]('+bbox+'););out center tags 1200;';
- const buttons=[$('loadMalagaPOI'),$('loadAndaluciaPOI')].filter(Boolean);
- buttons.forEach(b=>b.disabled=true);
- mapMessage(near?'Buscando lugares y servicios cerca de Málaga…':'Buscando puntos de interés en Andalucía. Puede tardar un poco…');
- const endpoints=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://overpass.private.coffee/api/interpreter'];
- let data=null,lastError=null;
- for(const endpoint of endpoints){
-  let controller=null,timeoutId=null;
-  try{
-   controller=typeof AbortController!=='undefined'?new AbortController():null;
-   if(controller)timeoutId=setTimeout(()=>controller.abort(),28000);
-   const options={method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8','Accept':'application/json'},body:'data='+encodeURIComponent(selectors),mode:'cors',credentials:'omit'};
-   if(controller)options.signal=controller.signal;
-   const response=await fetch(endpoint,options);
-   if(!response.ok)throw new Error('HTTP '+response.status);
-   const candidate=await response.json();
-   if(!candidate||!Array.isArray(candidate.elements))throw new Error('Respuesta cartográfica no válida');
-   data=candidate;break;
-  }catch(err){lastError=err;if(err&&err.name==='AbortError')lastError=new Error('La consulta ha tardado demasiado')}
-  finally{if(timeoutId)clearTimeout(timeoutId)}
- }
- try{
-  let fromCache=false;
-  if(!data){
-   let cached=null;
-   try{cached=JSON.parse(localStorage.getItem('c360_live_poi_'+(near?'malaga':'andalucia'))||'null')}catch(_){}
-   if(cached&&Array.isArray(cached.elements)&&cached.elements.length){data=cached;fromCache=true}
-   else throw lastError||new Error('Los servidores de mapas no responden');
-  }else{
-   try{localStorage.setItem('c360_live_poi_'+(near?'malaga':'andalucia'),JSON.stringify({elements:data.elements,savedAt:Date.now()}))}catch(_){}
-  }
-  const nextMarkers=[],seen=new Set();
-  (data.elements||[]).forEach(el=>{
-   const tags=el.tags||{};
-   const lat=Number(el.lat??(el.center&&el.center.lat)),lon=Number(el.lon??(el.center&&el.center.lon));
-   if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)return;
-   const name=livePOIName(tags),key=name.toLowerCase()+'|'+lat.toFixed(4)+'|'+lon.toFixed(4);
-   if(seen.has(key))return;seen.add(key);
-   const type=['tourism','historic','healthcare','emergency','public_transport','shop','leisure','amenity','office'].find(k=>tags[k]);
-   const detail=tags.tourism||tags.historic||tags.amenity||tags.shop||tags.healthcare||tags.leisure||tags.public_transport||tags.emergency||tags.office||'punto de interés';
-   const marker=L.marker([lat,lon],{icon:livePOIIcon(tags),title:name,alt:name});
-   const address=[tags['addr:street'],tags['addr:housenumber'],tags['addr:city']||tags['addr:town']||tags['addr:village']].filter(Boolean).join(', ');
-   const access=tags.wheelchair?'<br><b>Accesibilidad:</b> '+escapePOI(tags.wheelchair):'';
-   const content='<b>'+escapePOI(name)+'</b><br><small>'+escapePOI(type||'lugar')+' · '+escapePOI(detail)+'</small>'+(address?'<br>'+escapePOI(address):'')+access+'<br><small>Datos de OpenStreetMap</small><br><a target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/?mlat='+lat+'&mlon='+lon+'#map=18/'+lat+'/'+lon+'">Abrir ubicación ↗</a>';
-   marker.bindPopup(content);nextMarkers.push(marker);
-  });
-  if(nextMarkers.length===0)throw new Error('La consulta no ha devuelto lugares con coordenadas');
-  clearLivePOIMarkersOnly();
-  nextMarkers.forEach(m=>{m.addTo(realMap);livePOIMarkers.push(m)});
-  if(near)realMap.setView([36.7213,-4.4214],11);
-  mapMessage(fromCache?'El catálogo en directo no responde. Mostrando los últimos lugares guardados en este dispositivo; vuelve a intentarlo para actualizar.':'Encontrados '+livePOIMarkers.length+' lugares. Fuente: OpenStreetMap. Toca un marcador para ver detalles.');
- }catch(err){
-  mapMessage('No se han podido cargar los sitios de interés. El mapa y tus puntos guardados no se han borrado. Comprueba la conexión e inténtalo de nuevo. Detalle: '+(err&&err.message?err.message:'error de conexión')+'.');
- }finally{buttons.forEach(b=>b.disabled=false)}
+ const malaga=[
+ ['Alcazaba de Málaga',36.7213,-4.4156,'🏰','Monumento'],['Teatro Romano',36.7212,-4.4181,'🏛️','Historia'],
+ ['Museo Picasso Málaga',36.7219,-4.4184,'🎨','Museo'],['Catedral de Málaga',36.7205,-4.4197,'⛪','Monumento'],
+ ['Mercado de Atarazanas',36.7195,-4.4251,'🛍️','Mercado'],['Estación María Zambrano',36.7111,-4.4327,'🚆','Transporte'],
+ ['Hospital Regional Universitario',36.7182,-4.4368,'🏥','Salud'],['Hospital Clínico Universitario',36.7157,-4.4775,'🏥','Salud'],
+ ['Ayuntamiento de Málaga',36.7196,-4.4143,'🏢','Administración'],['Plaza de la Merced',36.7235,-4.4181,'📍','Plaza'],
+ ['Playa de La Malagueta',36.7196,-4.4024,'🏖️','Playa'],['Estadio La Rosaleda',36.7338,-4.4268,'⚽','Deporte'],
+ ['Aeropuerto de Málaga-Costa del Sol',36.6749,-4.4991,'✈️','Transporte'],['Palacio de Ferias y Congresos',36.7042,-4.4450,'🏢','Servicios'],
+ ['Castillo de Gibralfaro',36.7235,-4.4103,'🏰','Mirador'],['Jardín Botánico La Concepción',36.7650,-4.4235,'🌿','Naturaleza'],
+ ['Calle Larios',36.7191,-4.4200,'🛍️','Comercio'],['Puerto de Málaga',36.7157,-4.4140,'⚓','Puerto']
+ ];
+ const andalucia=[...malaga.slice(0,1),['Alhambra de Granada',37.1761,-3.5881,'🏰','Monumento'],['Mezquita-Catedral de Córdoba',37.8791,-4.7794,'🕌','Monumento'],['Catedral de Sevilla',37.3861,-5.9928,'⛪','Monumento'],['Catedral de Cádiz',36.5297,-6.2928,'⛪','Monumento'],['Alcazaba de Almería',36.8403,-2.4747,'🏰','Monumento'],['Castillo de Santa Catalina, Jaén',37.7667,-3.7903,'🏰','Monumento'],['Catedral de Huelva',37.2571,-6.9507,'⛪','Monumento']];
+ clearLivePOIMarkersOnly();
+ const places=near?malaga:andalucia;
+ places.forEach(p=>{
+  const icon=L.divIcon({className:'c360-poi-glow-wrap',html:'<div class="c360-poi-glow" aria-label="'+escapePOI(p[0])+'"><span>'+p[3]+'</span></div>',iconSize:[42,42],iconAnchor:[21,21],popupAnchor:[0,-18]});
+  const marker=L.marker([p[1],p[2]],{icon,title:p[0],alt:p[0]}).addTo(realMap);
+  marker.bindPopup('<div style="min-width:170px"><strong style="font-size:14px">'+escapePOI(p[0])+'</strong><br><span>'+escapePOI(p[4])+' · '+(near?'Málaga':'Andalucía')+'</span><br><a target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/?mlat='+p[1]+'&mlon='+p[2]+'#map=17/'+p[1]+'/'+p[2]+'">Abrir ubicación ↗</a></div>');
+  livePOIMarkers.push(marker);
+ });
+ realMap.setView(near?[36.7213,-4.4214]:[37.3,-4.7],near?13:7);
+ mapMessage('✨ '+livePOIMarkers.length+' sitios de interés iluminados cargados '+(near?'en Málaga':'en Andalucía')+'. Toca cualquier marcador para ver detalles.');
 }
+
 function clearLivePOIMarkersOnly(){livePOIMarkers.forEach(m=>realMap&&realMap.removeLayer(m));livePOIMarkers=[];}
 
 function initRealMap(){
@@ -1074,7 +1043,7 @@ $('openBraille').onclick=()=>{$('braillePanel').hidden=!$('braillePanel').hidden
 const brailleMap={'a':'⠁','b':'⠃','c':'⠉','d':'⠙','e':'⠑','f':'⠋','g':'⠛','h':'⠓','i':'⠊','j':'⠚','k':'⠅','l':'⠇','m':'⠍','n':'⠝','o':'⠕','p':'⠏','q':'⠟','r':'⠗','s':'⠎','t':'⠞','u':'⠥','v':'⠧','w':'⠺','x':'⠭','y':'⠽','z':'⠵','á':'⠷','é':'⠿','í':'⠌','ó':'⠬','ú':'⠾','ñ':'⠻','ü':'⠳','1':'⠼⠁','2':'⠼⠃','3':'⠼⠉','4':'⠼⠙','5':'⠼⠑','6':'⠼⠋','7':'⠼⠛','8':'⠼⠓','9':'⠼⠊','0':'⠼⠚',',':'⠂',';':'⠆',':':'⠒','.':'⠲','?':'⠦','!':'⠖','-':'⠤',' ':'⠀','\n':'\n'};
 $('convertBraille').onclick=()=>{$('brailleOutput').textContent=Array.from($('brailleText').value.toLocaleLowerCase('es')).map(c=>brailleMap[c]||c).join('')||'Escribe texto para convertirlo.'};
 
-choose('Málaga');render();initRealMap();
+choose('Málaga');render();initRealMap();setTimeout(()=>searchLivePOI('malaga'),900);
 function setPressed(id,on){const el=$(id);if(el)el.setAttribute('aria-pressed',String(on))}
 function setAccessStatus(message){const el=$('accessStatus');if(el)el.textContent=message}
 const simpleBtn=$('simpleMode');if(simpleBtn)simpleBtn.onclick=()=>{document.body.classList.toggle('simple2030');const on=document.body.classList.contains('simple2030');setPressed('simpleMode',on);setAccessStatus(on?'Vista sencilla activada: se ocultan los paneles secundarios.':'Vista completa restaurada.')};
