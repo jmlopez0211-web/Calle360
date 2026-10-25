@@ -47,6 +47,128 @@
   }
 }
 
+
+/* CALLE360 — interfaz mejorada */
+.top {
+  position: relative;
+  box-shadow: 0 3px 16px #102a4308;
+}
+
+.content {
+  max-width: 1500px;
+  padding: clamp(14px, 2.5vw, 32px);
+}
+
+.panel {
+  border-radius: 18px;
+  box-shadow: 0 5px 20px #102a4308;
+}
+
+.panel-head {
+  padding: 18px 20px;
+}
+
+.mapbox {
+  background: radial-gradient(
+    ellipse at center,
+    #e0f3ef,
+    #f3f9f8
+  );
+  padding: 20px;
+}
+
+.map-layout {
+  grid-template-columns: minmax(0, 1fr) 165px;
+  gap: 16px;
+}
+
+.map {
+  max-height: 440px;
+  filter: drop-shadow(0 8px 7px #102a4312);
+}
+
+.map-key button {
+  padding: 11px;
+  border-radius: 12px;
+}
+
+.btn {
+  min-height: 42px;
+}
+
+.modules {
+  gap: 14px;
+}
+
+.module {
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 4px 16px #102a4308;
+}
+
+.field input,
+.field select,
+.field textarea {
+  min-height: 44px;
+}
+
+@media (max-width: 720px) {
+  .content {
+    padding: 14px;
+  }
+
+  .top {
+    padding: 12px;
+    gap: 6px;
+  }
+
+  .top .btn {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .welcome h1 {
+    font-size: 29px;
+    line-height: 1.15;
+  }
+
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .map-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .map {
+    width: 100%;
+    max-width: 510px;
+    margin: auto;
+    display: block;
+  }
+
+  .map-key {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .stats {
+    gap: 9px;
+  }
+
+  .stat {
+    padding: 13px;
+  }
+
+  .modules {
+    gap: 9px;
+  }
+
+  .module {
+    padding: 13px;
+  }
+}
+  
 </style>
 </head>
 <body>
