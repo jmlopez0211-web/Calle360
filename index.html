@@ -1088,5 +1088,13 @@ document.getElementById('c360ThemeRandom').addEventListener('click',()=>{let poo
 let initial='alien';try{initial=localStorage.getItem('calle360_visual_theme')||'alien'}catch(e){}setTheme(initial,false);apply();
 })();
 </script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js", {scope: "./"})
+      .catch(error => console.error("Error PWA:", error));
+  });
+}
 
+</script>
 </body></html>
