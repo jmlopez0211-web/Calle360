@@ -1,5 +1,0 @@
-CALLE360ONCE V19 — Málaga y sitios de interés iluminados
-
-Incluye: Málaga en el encabezado, marcadores luminosos integrados y carga automática de sitios de interés al abrir el mapa. Los marcadores integrados no dependen de Overpass.
-
-Publicación: sustituye index.html en la raíz del repositorio GitHub. Conserva los demás archivos existentes.
