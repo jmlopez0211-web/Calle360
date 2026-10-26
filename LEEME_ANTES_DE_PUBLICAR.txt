@@ -1,9 +1,0 @@
-CALLE360ONCE — paquete de reparación
-
-Contenido: index.html corregido, archivos PWA existentes y recursos de la versión incluida.
-
-Mejora principal: la búsqueda de sitios de interés prueba tres servidores Overpass, limita el tiempo de espera, guarda resultados correctos en la caché local y solo reemplaza los marcadores anteriores cuando la nueva búsqueda tiene resultados válidos.
-
-Publicación: haz una copia de seguridad del index.html actual del repositorio. Sube los archivos de este paquete a la raíz del repositorio manteniendo las carpetas y nombres. GitHub Pages debe publicar desde la misma rama/carpeta que ya usas. Después, abre la web y recarga sin caché; en Android, si sigue apareciendo la versión antigua, cierra la PWA y limpia solo la caché del sitio. No borres datos del sitio si quieres conservar datos guardados localmente.
-
-Importante: se han comprobado sintaxis de scripts, estructura básica y ZIP; no se ha podido ejecutar una prueba real en todos los móviles ni garantizar disponibilidad permanente de servicios externos. La ubicación y otros permisos los concede el usuario desde el navegador; la aplicación no puede auto-concederse permisos.
