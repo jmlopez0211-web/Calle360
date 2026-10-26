@@ -1,6 +1,13 @@
 /* CALLE360ONCE · caché de la interfaz local. No almacena datos personales ni teselas de mapas. */
 const CACHE = 'calle360once-shell-v15';
-const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/calle360once.svg', './icons/calle360once-192.png', './icons/calle360once-512.png'];
+const SHELL = [
+  "./",
+  "./index.html",
+  "./manifest.webmanifest",
+  "./calle360once.svg",
+  "./calle360once-192.png",
+  "./calle360once-512.png"
+];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
 });
