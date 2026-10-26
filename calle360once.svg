@@ -1,1 +1,8 @@
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" rx="110" fill="#071838"/>
+<rect x="24" y="24" width="464" height="464" rx="96" fill="#0d2e5b" stroke="#1cdce2" stroke-width="8"/>
+<circle cx="256" cy="214" r="150" fill="none" stroke="#00d2ff" stroke-opacity=".45" stroke-width="10"/>
+<circle cx="256" cy="214" r="120" fill="none" stroke="#7d46ff" stroke-opacity=".7" stroke-width="8"/>
+<text x="256" y="260" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="145" fill="white">360</text>
+<text x="256" y="400" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="48" fill="#74ffef">CALLE360</text>
+</svg>
