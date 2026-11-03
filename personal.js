@@ -115,9 +115,16 @@ function ensurePanel(){
   const page=$('page-contactos'),module=page&&page.querySelector('.modulepage');
   if(!module||$('personalContactsPanel'))return;
   const panel=document.createElement('section');panel.id='personalContactsPanel';panel.className='personal-panel';
-  panel.innerHTML='<div class="personal-panel-head"><div><span class="personal-eyebrow">AGENDA PERSONAL</span><h3>Mis contactos</h3><p>En Android: abre Contactos, selecciona una ficha y pulsa Compartir → CALLE360. También puedes importar un archivo VCF.</p></div><div class="personal-actions"><button type="button" class="personal-btn primary" id="pickPhoneContacts">＋ Elegir del teléfono</button><button type="button" class="personal-btn" id="chooseVcf">Importar archivo VCF</button><input type="file" id="vcfFile" accept=".vcf,text/vcard" hidden></div></div><div class="personal-import-status" id="personalImportStatus" role="status" aria-live="polite">La importación requiere tu selección. No se copia toda la agenda automáticamente.</div><label class="personal-search-label" for="personalContactSearch">Buscar en mis contactos</label><input id="personalContactSearch" class="personal-contact-search" type="search" placeholder="Nombre, teléfono o correo…"><div class="personal-contact-list" id="personalContactList"></div>';
+  panel.innerHTML='<div class="personal-panel-head"><div><span class="personal-eyebrow">AGENDA PERSONAL</span><h3>Mis contactos</h3><p>En Android: abre Contactos, selecciona uno o varios registros y pulsa Compartir → CALLE360. También puedes importar un archivo VCF.</p></div><div class="personal-actions"><button type="button" class="personal-btn primary" id="pickPhoneContacts">＋ Importar desde Contactos</button><button type="button" class="personal-btn" id="chooseVcf">Importar archivo VCF</button><input type="file" id="vcfFile" accept=".vcf,text/vcard" hidden></div></div><div class="personal-import-status" id="personalImportStatus" role="status" aria-live="polite">La importación requiere tu selección. No se copia toda la agenda automáticamente.</div><label class="personal-search-label" for="personalContactSearch">Buscar en mis contactos</label><input id="personalContactSearch" class="personal-contact-search" type="search" placeholder="Nombre, teléfono o correo…"><div class="personal-contact-list" id="personalContactList"></div>';
   module.appendChild(panel);
-  $('pickPhoneContacts').addEventListener('click',pickPhoneContacts);
+  $('pickPhoneContacts').addEventListener('click',()=>{
+    const isAndroid=/Android/i.test(navigator.userAgent);
+    if(isAndroid){
+      status('Para elegir contactos en este Samsung: abre la aplicación Contactos del teléfono, selecciona uno o varios contactos, pulsa Compartir y elige CALLE360. Después confirma aquí la importación. Si CALLE360 no aparece, instala/actualiza la PWA desde Chrome y vuelve a intentarlo.');
+    }else{
+      pickPhoneContacts();
+    }
+  });
   $('chooseVcf').addEventListener('click',()=>$('vcfFile').click());
   $('vcfFile').addEventListener('change',importVcf);
   $('personalContactSearch').addEventListener('input',renderContacts);
