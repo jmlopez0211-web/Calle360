@@ -524,12 +524,23 @@ function recordColleagueVisit(id){
  const points=read('points'),p=points.find(x=>x.id===id);
  if(!p)return;
  const today=new Date().toISOString().slice(0,10);
- const note=prompt(`Nota opcional de la visita a ${p.name}:`,'');
+ const note=prompt('Nota opcional de la visita a '+p.name+':','');
  if(note===null)return;
  const visits=read('visits');
  visits.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),createdAt:new Date().toISOString(),place:p.name,province:p.province||'',date:today,status:'Realizada',notes:[p.town,p.address,note.trim()].filter(Boolean).join(' · '),colleagueId:p.id});
  p.visitCount=(Number(p.visitCount)||0)+1;p.lastVisited=today;
- if(save('visits',visits)&&save('points',points)){render();mapMessage(`Visita a ${p.name} guardada solo en este navegador.`);}
+ const oldVisits=localStorage.getItem(store.visits),oldPoints=localStorage.getItem(store.points);
+ try{
+  localStorage.setItem(store.visits,JSON.stringify(visits));
+  localStorage.setItem(store.points,JSON.stringify(points));
+  render();mapMessage('Visita a '+p.name+' guardada solo en este navegador.');
+ }catch(error){
+  try{
+   if(oldVisits===null)localStorage.removeItem(store.visits);else localStorage.setItem(store.visits,oldVisits);
+   if(oldPoints===null)localStorage.removeItem(store.points);else localStorage.setItem(store.points,oldPoints);
+  }catch(rollbackError){}
+  alert('No se ha podido guardar la visita completa. Se ha intentado recuperar el estado anterior. Comprueba el espacio disponible.');
+ }
 }
 function exportPersonalBackup(){
  const payload={app:'CALLE360',formatVersion:1,exportedAt:new Date().toISOString(),data:Object.fromEntries(Object.keys(store).map(k=>[k,read(k)]))};
@@ -754,7 +765,7 @@ const TOURISM_PLACES = [
 TOURISM_PLACES.find(p=>p.id==='huelva-muelle').lng=-6.9500;
 let tourismMarkers=[], tourismVisible=false, tourismFilter='todos';
 function tourismIcon(emoji){return L.divIcon({className:'',html:`<div class="tourism-pin"><span>${emoji}</span></div>`,iconSize:[36,36],iconAnchor:[18,32],popupAnchor:[0,-28]})}
-function filteredTourism(){return TOURISM_PLACES.filter(p=>tourismFilter==='todos'||p.cat===tourismFilter)}
+function filteredTourism(){return TOURISM_PLACES.filter(p=>tourismFilter==='todos'||p.cat===tourismFilter).sort((a,b)=>(a.province==='Málaga'?0:1)-(b.province==='Málaga'?0:1))}
 function drawTourismMarkers(){
  if(!realMap)return;
  tourismMarkers.forEach(m=>realMap.removeLayer(m));tourismMarkers=[];
@@ -826,7 +837,7 @@ function showCuratedPOI(near){
  ['Hospital Regional Universitario',36.7245,-4.4360,'➕','Salud'],['Palacio de Ferias y Congresos',36.7055,-4.4690,'🏢','Eventos']
  ];
  const andalucia=[
- ['Alcazaba de Almería',36.8402,-2.4748,'🏰','Historia'],['Catedral de Cádiz',36.5297,-6.2947,'⛪','Monumento'],
+ ['Alcazaba de Málaga',36.7194,-4.4183,'🏰','Historia'],['Teatro Romano de Málaga',36.7200,-4.4180,'🏛️','Historia'],['Alcazaba de Almería',36.8402,-2.4748,'🏰','Historia'],['Catedral de Cádiz',36.5297,-6.2947,'⛪','Monumento'],
  ['Mezquita-Catedral de Córdoba',37.8791,-4.7794,'🏛️','Monumento'],['Alhambra de Granada',37.1760,-3.5881,'🏰','Historia'],
  ['Muelle del Tinto, Huelva',37.2528,-6.9547,'⚓','Monumento'],['Catedral de Jaén',37.7650,-3.7900,'⛪','Monumento'],
  ...places.slice(0,8),['Real Alcázar de Sevilla',37.3830,-5.9905,'🏰','Historia']
