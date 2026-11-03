@@ -165,9 +165,13 @@ function planContactVisit(contactId){
   const contact=store.read('contacts').find(c=>c.id===contactId);if(!contact)return;
   store.go('rutas');
   const place=$('visitPlace'),date=$('visitDate'),statusField=$('visitStatus'),notes=$('visitNotes');
+  const linkedPoint=store.read('points').find(p=>p.contactRef===contact.id);
+  const province=$('visitProv'),linkField=$('visitColleagueId');
   if(place)place.value=contact.name;
+  if(province)province.value=linkedPoint?.province||contact.province||'';
   if(statusField)statusField.value='Planificada';
   if(notes)notes.value=[contact.role,contact.phone||contact.method,contact.address].filter(Boolean).join(' · ');
+  if(linkField)linkField.value=linkedPoint?.id||'';
   if(date)date.focus();else if(place)place.focus();
   status('Visita preparada para '+contact.name+'. Completa la fecha y guarda la visita.');
 }
