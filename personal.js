@@ -52,7 +52,7 @@ function importContacts(items,source){
     if(!keys.has(key)){keys.add(key);added.push({...c,id:'c-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8),createdAt:new Date().toISOString(),source});}
   });
   if(!added.length){status('No hay contactos nuevos; los duplicados se han omitido.');return;}
-  if(store.save('contacts',existing.concat(added))){renderContacts();status(added.length+' contacto(s) importado(s). Los datos permanecen en este dispositivo.');}
+  if(store.save('contacts',existing.concat(added))){renderContacts();updateDashboard();status(added.length+' contacto(s) importado(s). Los datos permanecen en este dispositivo.');}
 }
 
 async function pickPhoneContacts(){
@@ -114,7 +114,7 @@ function createPoint(contactId){
   const contact=store.read('contacts').find(c=>c.id===contactId);if(!contact)return;
   const points=store.read('points'),id='p-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8);
   const point={id,createdAt:new Date().toISOString(),contactRef:contact.id,name:contact.name,town:'',province:contact.province||'',type:'Compañero',address:contact.address||'',schedule:'',contact:contact.phone||contact.method||'',notes:[contact.role,contact.email,contact.notes].filter(Boolean).join(' · '),lat:'',lng:'',visitCount:0};
-  if(store.save('points',points.concat(point))){renderContacts();store.go('inicio');setTimeout(()=>startMapPlacement(id),350);}
+  if(store.save('points',points.concat(point))){renderContacts();updateDashboard();store.go('inicio');setTimeout(()=>startMapPlacement(id),350);}
 }
 
 function locatePoint(id){
@@ -184,6 +184,14 @@ function init(){
     const original=store.render;
     store.render=function(){original();renderContacts();updateDashboard();};
     window.__c360PersonalRenderWrapped=true;
+  }
+  if(!window.__c360PersonalObserver && 'MutationObserver' in window){
+    const observer=new MutationObserver(()=>{renderContacts();updateDashboard();});
+    ['pointRecords','visitRecords','contactRecords','taskRecords'].forEach(id=>{
+      const target=$(id);
+      if(target)observer.observe(target,{childList:true,subtree:true});
+    });
+    window.__c360PersonalObserver=observer;
   }
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
