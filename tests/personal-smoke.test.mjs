@@ -28,7 +28,7 @@ test('PWA enlaza y cachea los módulos personales',()=>{
  assert.match(html,/src=["']\.\/personal\.js["']/);
  assert.match(sw,/personal\.css/);
  assert.match(sw,/personal\.js/);
- assert.match(sw,/calle360once-shell-v21/);
+ assert.match(sw,/calle360once-shell-v22/);
  assert.equal(manifest.lang,'es-ES');
  assert.equal(manifest.display,'standalone');
  assert.equal(manifest.share_target.method,'POST');
@@ -46,6 +46,10 @@ test('contactos: selector compatible, importación VCF y búsqueda local',()=>{
  assert.match(personal,/Instala CALLE360 como aplicación desde Chrome/);
  assert.match(personal,/parseVcf/);
  assert.match(personal,/contactPhoneKey/);
+ assert.match(personal,/return phone===oldPhone/);
+ assert.match(css,/color-scheme:light!important/);
+ assert.match(css,/#edf3f8/);
+ assert.doesNotMatch(css,/color-scheme:dark/);
  assert.match(personal,/isDamagedContactName/);
  assert.match(personal,/_nameNeedsRefresh/);
  assert.match(personal,/Cómo importar desde Samsung/);
