@@ -161,3 +161,14 @@ test('Controles principales tienen áreas táctiles ampliadas',()=>{
  assert.match(html,/button,\.btn,\.personal-btn[^}]*min-height:48px/);
  assert.match(html,/@media\(max-width:600px\)[\s\S]*?min-height:52px/);
 });
+
+
+test('transcribe español básico',()=>{
+ const mapStart=html.indexOf('const brailleMap=');
+ const fnStart=html.indexOf('function convertSpanishBraille(value)',mapStart);
+ const end=html.indexOf("\\n$('convertBraille').onclick",fnStart);
+ const source=html.slice(mapStart,end);
+ const convert=new Function(source+';return convertSpanishBraille;')();
+ assert.equal(convert('A1 12 áéíóúñ').text,'⠨⠁⠼⠁⠀⠼⠁⠃⠀⠷⠮⠌⠬⠾⠻');
+ assert.equal(convert('Hola').text,'⠨⠓⠕⠇⠁');
+});
