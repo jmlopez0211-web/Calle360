@@ -116,6 +116,16 @@ test('cartografía clara y paneles oscuros separados',()=>{
  assert.match(css,/\.personal-dashboard/);
 });
 
+test('puntos guardados aparecen en resultados con filtros y acciones',()=>{
+ assert.match(html,/data-result-map/);
+ assert.match(html,/data-result-visit/);
+ assert.match(html,/data-show-point/);
+ assert.match(html,/!rowProvince\|\|rowProvince===province/);
+ assert.match(html,/\$\('pointProv'\)\.value='Málaga'/);
+ assert.match(personal,/store\.render\(\);store\.mapMessage\('Ubicación guardada para '/);
+ assert.match(personal,/data-plan-point/);
+});
+
 test('marcador puede planificar una visita vinculada al compañero',()=>{
  assert.match(html,/calle360PlanPointVisit/);
  assert.match(html,/visitColleagueId/);
