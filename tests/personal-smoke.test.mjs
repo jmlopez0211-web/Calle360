@@ -28,7 +28,7 @@ test('PWA enlaza y cachea los módulos personales',()=>{
  assert.match(html,/src=["']\.\/personal\.js["']/);
  assert.match(sw,/personal\.css/);
  assert.match(sw,/personal\.js/);
- assert.match(sw,/calle360once-shell-v17/);
+ assert.match(sw,/calle360once-shell-v18/);
  assert.equal(manifest.lang,'es-ES');
  assert.equal(manifest.display,'standalone');
 });
@@ -53,6 +53,12 @@ test('interfaz responsive y tema de centro de operaciones',()=>{
  assert.match(css,/@media\(max-width:700px\)/);
  assert.match(css,/personal-dashboard/);
  assert.match(css,/map-pin-colleague/);
+});
+
+test('los filtros de provincia, municipio y búsqueda ignoran tildes',()=>{
+ assert.match(html,/function searchKey\(value\)/);
+ assert.match(html,/normalize\('NFD'\)/);
+ assert.match(html,/searchKey\(\[r\.town,r\.address\]/);
 });
 
 test('Málaga es el punto de partida y aparece primero en la guía',()=>{
