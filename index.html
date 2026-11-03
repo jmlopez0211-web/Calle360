@@ -380,6 +380,27 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 body[data-c360-theme="alien"] .c360-theme-banner{background:radial-gradient(ellipse at 78% 45%,rgba(0,245,212,.25),transparent 42%),linear-gradient(110deg,#030d22,#092d51 55%,#17103c);border-color:#00dcca}body[data-c360-theme="space"] .c360-theme-banner{background:radial-gradient(ellipse at 80% 45%,rgba(177,100,255,.28),transparent 45%),linear-gradient(110deg,#080c2c,#25215e 60%,#061c34)}body[data-c360-theme="paranormal"] .c360-theme-banner{background:linear-gradient(110deg,#0a1522,#283447 60%,#171128)}body[data-c360-theme="cyberpunk"] .c360-theme-banner{background:linear-gradient(110deg,#150a2a,#312060 60%,#042d40);border-color:#ff4dbe}body[data-c360-theme="semanasanta"] .c360-theme-banner{background:linear-gradient(110deg,#160e20,#49202e 58%,#1e142b);border-color:#d9a76c}body[data-c360-theme="legion"] .c360-theme-banner{background:linear-gradient(110deg,#101b1b,#34432d 58%,#1d2529);border-color:#c4ad63}body[data-c360-theme="flamenco"] .c360-theme-banner{background:linear-gradient(110deg,#200b1b,#5b172b 58%,#170e20);border-color:#ff5371}body[data-c360-theme="andalucia"] .c360-theme-banner{background:linear-gradient(110deg,#06203b,#087a79 58%,#12316c)}body[data-c360-theme="explorer"] .c360-theme-banner{background:linear-gradient(110deg,#14252c,#355340 58%,#1a2941)}body[data-c360-theme="ocean"] .c360-theme-banner{background:linear-gradient(110deg,#03182f,#05536a 58%,#101f54);border-color:#00ddff}body[data-c360-theme="retro"] .c360-theme-banner{background:linear-gradient(110deg,#210d3b,#3a2269 58%,#073747);border-color:#ff4b8a}body[data-c360-theme="minimal"] .c360-theme-banner{background:linear-gradient(110deg,#18263a,#273d57 58%,#0d2238);border-color:#bdd6ef}
 @media(max-width:700px){.c360-theme-options{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:560px){.c360-theme-studio{padding:10px}.c360-theme-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.c360-theme-choice{min-height:72px}.c360-theme-banner{padding:15px;min-height:135px;gap:5px}.c360-theme-copy{max-width:68%}.c360-theme-copy h2{font-size:19px}.c360-theme-copy p{font-size:10px}.c360-theme-art{width:30%;min-height:80px}.c360-theme-art .art-emoji{font-size:48px}.c360-theme-art .art-orbit{width:75px;height:28px}.c360-theme-bottom{flex-direction:column;gap:4px}}@media(prefers-reduced-motion:reduce){.c360-theme-art .art-emoji{animation:none!important}.c360-theme-choice{transition:none}}
 
+
+/* Accesibilidad: objetivos táctiles amplios y controles legibles */
+button,.btn,.personal-btn,.modulebar button,.leftnav button,.quickbar button,.provincechips button{min-height:48px;min-width:48px;padding:11px 14px;font-size:14px;line-height:1.3;touch-action:manipulation}
+input,select,textarea{min-height:48px;font-size:16px!important;padding:10px 12px!important}
+label{font-size:14px!important;line-height:1.4}
+.accessibility-page{display:grid;gap:14px}
+.access-profile-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px}
+.access-profile-grid .btn{min-height:58px;font-size:16px;font-weight:800}
+.access-feature{padding:16px;border:2px solid #c7dce7;border-radius:16px;background:#f8fcff;color:#18364b}
+.access-feature h3{margin:0 0 8px;font-size:20px;color:#123b56}
+.access-feature p{font-size:15px;line-height:1.55;color:#35566b}
+.access-link-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.access-resource{display:flex;flex-direction:column;gap:7px;padding:15px;border:2px solid #b9d5e4;border-radius:13px;background:#fff;color:#123b56;text-decoration:none;min-height:100px}
+.access-resource strong{font-size:16px}.access-resource span{font-size:14px;line-height:1.45;color:#35566b}
+.access-note{padding:12px;background:#fff7e6;border-left:5px solid #d28a12;border-radius:8px}
+.access-action-row{display:flex;flex-wrap:wrap;gap:9px;margin:10px 0}
+.access-action-row .btn{min-height:52px;font-size:15px}
+.braille-output{min-height:82px;padding:16px;border:2px solid #1680ad;border-radius:13px;background:#fff;color:#082d46;font-family:"Noto Sans Symbols 2","Segoe UI Symbol",sans-serif;font-size:clamp(30px,6vw,42px);line-height:1.65;letter-spacing:3px;overflow-wrap:anywhere;user-select:text}
+.access-page-status{font-size:14px!important;line-height:1.5!important}
+.access-source{display:inline-block;margin-top:8px;font-size:15px;font-weight:800}
+@media(max-width:600px){button,.btn,.personal-btn,.modulebar button,.leftnav button,.quickbar button,.provincechips button{min-height:52px;padding:12px 14px;font-size:15px}.access-profile-grid{grid-template-columns:1fr 1fr}.access-feature{padding:13px}.access-feature h3{font-size:18px}.access-action-row{display:grid;grid-template-columns:1fr}.access-action-row .btn{width:100%}}
 </style><link rel="stylesheet" href="./personal.css"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head><body>
@@ -443,16 +464,10 @@ body[data-c360-theme="alien"] .c360-theme-banner{background:radial-gradient(elli
 </div>
 <p class="access-status" id="accessStatus" role="status" aria-live="polite">Herramientas listas. Puedes activarlas y desactivarlas cuando quieras.</p>
 <div class="access-extra">
-<button type="button" id="openSignResources">🤟 Recursos de lengua de signos</button>
-<button type="button" id="openBraille">⠿ Convertir texto a Braille</button>
+<button type="button" id="openSignResources">🤟 Abrir sección de lengua de signos</button>
+<button type="button" id="openBraille">⠿ Abrir herramienta Braille</button>
 </div>
-<div id="braillePanel" hidden>
-<label for="brailleText">Texto para convertir a caracteres Braille</label>
-<textarea id="brailleText" rows="3" placeholder="Escribe aquí el texto…"></textarea>
-<button type="button" class="btn primary" id="convertBraille">Convertir</button>
-<div id="brailleOutput" aria-live="polite">⠠⠉⠁⠇⠇⠑⠼⠉⠋⠚⠚</div>
-<p class="muted">Esto muestra caracteres Unicode Braille en pantalla. No sustituye un dispositivo Braille ni una traducción profesional de signos.</p>
-</div>
+
 </section>
 </section>
 <section class="page" id="page-agenda"><div class="modulepage"><h2>🗓️ Agenda personal</h2><p>Organiza visitas, recordatorios y tareas del día.</p><form id="taskForm" class="formgrid"><label>Tarea *<input id="taskTitle" required maxlength="120"></label><label>Fecha<input id="taskDate" type="date"></label><label>Provincia<select id="taskProv"></select></label><label>Prioridad<select id="taskPriority"><option>Normal</option><option>Alta</option><option>Urgente</option><option>Baja</option></select></label><label class="wide">Notas<textarea id="taskNotes" maxlength="1000"></textarea></label><div class="wide"><button class="btn primary">Guardar tarea</button></div></form><div class="records" id="taskRecords"></div></div></section>
@@ -476,7 +491,42 @@ body[data-c360-theme="alien"] .c360-theme-banner{background:radial-gradient(elli
 </div>
 <div class="help-note"><b>Importante sobre tus datos</b><p>Los registros se guardan en este navegador y dispositivo. No se comparten automáticamente con otros compañeros. Descarga una copia de seguridad periódicamente. El mapa es ilustrativo: no representa ubicaciones GPS reales.</p></div>
 </div></section>
-<section class="page" id="page-accesibilidad"><div class="modulepage"><h2>♿ Accesibilidad universal</h2><p>CALLE360 debe poder utilizarse con distintas necesidades visuales, auditivas, motoras y cognitivas.</p><button class="btn" id="contrast2">◐ Activar contraste alto</button> <button class="btn" id="large2">A+ Aumentar texto</button> <button class="btn" id="voice2">🔊 Leer instrucciones</button><p>Los controles de esta maqueta incluyen foco de teclado, áreas táctiles grandes, contraste y opción de reducir movimiento. Braille, lengua de signos, subtítulos y perfiles personalizados requieren contenidos y pruebas adicionales.</p></div></section>
+<section class="page" id="page-accesibilidad">
+<div class="modulepage accessibility-page">
+<h2>♿ Accesibilidad universal</h2>
+<p>Herramientas visibles y de uso sencillo. Los cambios visuales se aplican a toda la aplicación.</p>
+<div class="access-profile-grid" aria-label="Ajustes de accesibilidad">
+<button class="btn" type="button" id="contrast2" aria-pressed="false">◐ Alto contraste</button>
+<button class="btn" type="button" id="large2" aria-pressed="false">A+ Texto grande</button>
+<button class="btn" type="button" id="voice2">🔊 Leer instrucciones</button>
+<button class="btn" type="button" id="simpleModePage" aria-pressed="false">☷ Vista sencilla</button>
+<button class="btn" type="button" id="motionModePage" aria-pressed="false">⏸ Reducir movimiento</button>
+</div>
+<p id="accessPageStatus" class="access-page-status" role="status" aria-live="polite">Selecciona las ayudas que necesites. Puedes desactivarlas cuando quieras.</p>
+<section class="access-feature" aria-labelledby="lseTitle">
+<h3 id="lseTitle">🤟 Lengua de signos española (LSE)</h3>
+<p>Consulta signos reales en vídeo y fotografía en el diccionario DILSE de la Fundación CNSE. No utilizamos traducciones automáticas inventadas.</p>
+<div class="access-link-grid">
+<a class="access-resource" href="https://fundacioncnse-dilse.org/" target="_blank" rel="noopener noreferrer"><strong>📹 Diccionario DILSE</strong><span>Más de 10.000 signos en vídeo e imagen. Se abre en una pestaña nueva.</span></a>
+<a class="access-resource" href="https://www.fundacioncnse.org/recursos.php" target="_blank" rel="noopener noreferrer"><strong>📚 Recursos oficiales CNSE</strong><span>Materiales para aprender y consultar la LSE.</span></a>
+</div>
+<p class="access-note">La LSE es una lengua completa, no una sustitución palabra por palabra del castellano. Para contenidos propios de CALLE360 necesitaremos vídeos realizados o validados por profesionales sordos/intérpretes de LSE.</p>
+</section>
+<section class="access-feature" aria-labelledby="brailleTitle">
+<h3 id="brailleTitle">⠿ Conversor de texto a Braille español</h3>
+<p>Escribe o pega un texto. La aplicación genera caracteres Unicode Braille con letras, mayúsculas, números, tildes y puntuación básica.</p>
+<label for="brailleText">Texto que quieres convertir</label>
+<textarea id="brailleText" rows="4" maxlength="1200" placeholder="Ejemplo: CALLE360 abre a las 10:30."></textarea>
+<div class="access-action-row">
+<button type="button" class="btn primary" id="convertBraille">Convertir a Braille</button>
+<button type="button" class="btn" id="copyBraille">Copiar Braille</button>
+<button type="button" class="btn" id="clearBraille">Borrar</button>
+</div>
+<div id="brailleOutput" class="braille-output" role="status" aria-live="polite" aria-label="Resultado en caracteres Braille">Aquí aparecerá el resultado.</div>
+<p id="brailleStatus" class="access-page-status" role="status" aria-live="polite">Conversión básica de caracteres. No aplica abreviaturas ni estenografía.</p>
+<a class="access-source" href="https://www.once.es/gestorz/servicios-sociales/braille" target="_blank" rel="noopener noreferrer">Consultar el sistema Braille y materiales oficiales de la ONCE ↗</a>
+</section>
+</div></section>
 </main>
 <aside class="right">
 <div class="card"><div class="cardhead"><strong>🎛️ Filtrar puntos</strong><span class="live">ACTIVO</span></div><div class="cardbody"><div class="field"><label for="filterProv">Provincia</label><select id="filterProv"><option value="">Todas</option></select></div><div class="field"><label for="filterTown">Municipio o provincia</label><input id="filterTown" placeholder="Buscar municipio, provincia o dirección"></div><div class="field"><label for="filterType">Tipo</label><select id="filterType"><option value="">Todos</option><option>Punto de venta</option><option>Compañero</option><option>Oficina</option><option>Otro</option></select></div><div class="field"><label for="filterAccess">Accesibilidad</label><select id="filterAccess"><option value="">Todos</option><option>Accesible</option><option>Por verificar</option></select></div><button class="btn primary" id="applyFilter">⌕ Mostrar en el mapa</button></div></div>
@@ -967,10 +1017,15 @@ $('resetMap').addEventListener('click',()=>{if(realMap)realMap.setView([36.7213,
 document.querySelectorAll('[data-chip]').forEach(b=>b.addEventListener('click',()=>{if(!realMap)return;const centers={'Almería':[36.84,-2.46],'Cádiz':[36.53,-6.29],'Córdoba':[37.89,-4.78],'Granada':[37.18,-3.60],'Huelva':[37.26,-6.94],'Jaén':[37.78,-3.79],'Málaga':[36.72,-4.42],'Sevilla':[37.39,-5.99]};if(centers[b.dataset.chip])realMap.setView(centers[b.dataset.chip],11)}));
 const oldRender=render;
 render=function(){oldRender();drawStoredPoints()};
-$('openSignResources').onclick=()=>window.open('https://www.cnse.es/','_blank','noopener');
-$('openBraille').onclick=()=>{$('braillePanel').hidden=!$('braillePanel').hidden;if(!$('braillePanel').hidden)$('brailleText').focus()};
-const brailleMap={'a':'⠁','b':'⠃','c':'⠉','d':'⠙','e':'⠑','f':'⠋','g':'⠛','h':'⠓','i':'⠊','j':'⠚','k':'⠅','l':'⠇','m':'⠍','n':'⠝','o':'⠕','p':'⠏','q':'⠟','r':'⠗','s':'⠎','t':'⠞','u':'⠥','v':'⠧','w':'⠺','x':'⠭','y':'⠽','z':'⠵','á':'⠷','é':'⠿','í':'⠌','ó':'⠬','ú':'⠾','ñ':'⠻','ü':'⠳','1':'⠼⠁','2':'⠼⠃','3':'⠼⠉','4':'⠼⠙','5':'⠼⠑','6':'⠼⠋','7':'⠼⠛','8':'⠼⠓','9':'⠼⠊','0':'⠼⠚',',':'⠂',';':'⠆',':':'⠒','.':'⠲','?':'⠦','!':'⠖','-':'⠤',' ':'⠀','\n':'\n'};
-$('convertBraille').onclick=()=>{$('brailleOutput').textContent=Array.from($('brailleText').value.toLocaleLowerCase('es')).map(c=>brailleMap[c]||c).join('')||'Escribe texto para convertirlo.'};
+$('openSignResources').onclick=()=>go('accesibilidad');
+$('openBraille').onclick=()=>{go('accesibilidad');$('brailleText').focus()};
+const brailleMap={'a':'⠁','b':'⠃','c':'⠉','d':'⠙','e':'⠑','f':'⠋','g':'⠛','h':'⠓','i':'⠊','j':'⠚','k':'⠅','l':'⠇','m':'⠍','n':'⠝','ñ':'⠻','o':'⠕','p':'⠏','q':'⠟','r':'⠗','s':'⠎','t':'⠞','u':'⠥','v':'⠧','w':'⠺','x':'⠭','y':'⠽','z':'⠵','á':'⠷','é':'⠮','í':'⠌','ó':'⠬','ú':'⠾','ü':'⠳',',':'⠂',';':'⠆',':':'⠒','.':'⠄','?':'⠢','¿':'⠢','!':'⠖','¡':'⠖','-':'⠤','(':'⠣',')':'⠜',' ':'⠀','\\n':'\\n','\\t':'⠀',"'":'⠄','"':'⠦'};
+function convertSpanishBraille(value){let out='',inNumber=false,unsupported=[];for(const raw of Array.from(value)){if(raw==='\\n'){out+='\\n';inNumber=false;continue;}if(/[0-9]/.test(raw)){if(!inNumber)out+='⠼';out+=brailleMap[raw]||'';inNumber=true;continue;}inNumber=false;if(/[A-ZÁÉÍÓÚÜÑ]/.test(raw))out+='⠨';const c=raw.toLocaleLowerCase('es');if(brailleMap[c])out+=brailleMap[c];else if(c==='\\r'){}else{out+=raw;unsupported.push(raw);}}return {text:out,unsupported:[...new Set(unsupported)]};}
+$('convertBraille').onclick=()=>{const value=$('brailleText').value;if(!value.trim()){$('brailleOutput').textContent='Escribe texto para convertirlo.';$('brailleStatus').textContent='No hay texto para convertir.';return;}const result=convertSpanishBraille(value);$('brailleOutput').textContent=result.text;$('brailleStatus').textContent=result.unsupported.length?'Conversión básica completada. Se han conservado sin convertir estos caracteres: '+result.unsupported.join(' ')+'.':'Conversión básica completada. Revisa el resultado antes de usarlo como material accesible.';};
+$('copyBraille').onclick=async()=>{const value=$('brailleOutput').textContent;if(!value||value==='Aquí aparecerá el resultado.'||value==='Escribe texto para convertirlo.'){$('brailleStatus').textContent='Primero convierte un texto.';return;}try{await navigator.clipboard.writeText(value);$('brailleStatus').textContent='Resultado Braille copiado.';}catch(_){$('brailleStatus').textContent='No se pudo copiar automáticamente. Mantén pulsado el resultado para seleccionarlo.';}};
+$('clearBraille').onclick=()=>{$('brailleText').value='';$('brailleOutput').textContent='Aquí aparecerá el resultado.';$('brailleStatus').textContent='Texto borrado.';$('brailleText').focus()};
+$('simpleModePage').onclick=()=>{document.body.classList.toggle('simple2030');const on=document.body.classList.contains('simple2030');setPressed('simpleMode',on);setPressed('simpleModePage',on);$('accessPageStatus').textContent=on?'Vista sencilla activada.':'Vista completa restaurada.';};
+$('motionModePage').onclick=()=>{document.body.classList.toggle('motion2030');const on=document.body.classList.contains('motion2030');setPressed('motionMode',on);setPressed('motionModePage',on);$('accessPageStatus').textContent=on?'Movimiento reducido activado.':'Movimiento normal restaurado.';};
 
 choose('Málaga');render();initRealMap();
 function setPressed(id,on){const el=$(id);if(el)el.setAttribute('aria-pressed',String(on))}
