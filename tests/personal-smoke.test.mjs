@@ -28,7 +28,7 @@ test('PWA enlaza y cachea los módulos personales',()=>{
  assert.match(html,/src=["']\.\/personal\.js["']/);
  assert.match(sw,/personal\.css/);
  assert.match(sw,/personal\.js/);
- assert.match(sw,/calle360once-shell-v24/);
+ assert.match(sw,/calle360once-shell-v25/);
  assert.equal(manifest.lang,'es-ES');
  assert.equal(manifest.display,'standalone');
  assert.equal(manifest.share_target.method,'POST');
@@ -142,4 +142,33 @@ test('Busca vendedores guardados antes de llamar a Nominatim',()=>{
 
 test('Los filtros no ocultan contactos antiguos sin municipio',()=>{
  assert.match(html,/!r\.town&&!r\.address/);
+});
+
+
+test('Accesibilidad incluye recursos LSE y Braille español',()=>{
+ assert.match(html,/Diccionario DILSE/);
+ assert.match(html,/fundacioncnse-dilse\.org/);
+ assert.match(html,/Recursos oficiales CNSE/);
+ assert.match(html,/id="brailleText"/);
+ assert.match(html,/id="copyBraille"/);
+ assert.match(html,/id="clearBraille"/);
+ assert.match(html,/convertSpanishBraille/);
+ assert.match(html,/Consultar el sistema Braille y materiales oficiales de la ONCE/);
+ assert.doesNotMatch(html,/Braille, lengua de signos, subtítulos y perfiles personalizados requieren contenidos/);
+});
+
+test('Controles principales tienen áreas táctiles ampliadas',()=>{
+ assert.match(html,/button,\.btn,\.personal-btn[^}]*min-height:48px/);
+ assert.match(html,/@media\(max-width:600px\)[\s\S]*?min-height:52px/);
+});
+
+
+test('transcribe español básico',()=>{
+ const mapStart=html.indexOf('const brailleMap=');
+ const fnStart=html.indexOf('function convertSpanishBraille(value)',mapStart);
+ const end=html.indexOf("\n$('convertBraille').onclick",fnStart);
+ const source=html.slice(mapStart,end);
+ const convert=new Function(source+';return convertSpanishBraille;')();
+ assert.equal(convert('A1 12 áéíóúñ').text,'⠨⠁⠼⠁⠀⠼⠁⠃⠀⠷⠮⠌⠬⠾⠻');
+ assert.equal(convert('Hola').text,'⠨⠓⠕⠇⠁');
 });

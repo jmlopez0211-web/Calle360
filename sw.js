@@ -1,5 +1,5 @@
 /* CALLE360ONCE · caché de la interfaz local. No almacena datos personales ni teselas de mapas. */
-const CACHE = 'calle360once-shell-v24';
+const CACHE = 'calle360once-shell-v25';
 const SHELL = [
   "./",
   "./index.html",
