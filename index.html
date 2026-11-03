@@ -1072,8 +1072,11 @@ document.querySelectorAll('[data-page]').forEach(b=>{if(b.tagName==='BUTTON'&&!b
   const localStore=window.C360Store;
   if(localStore&&typeof localStore.read==='function'){
    const key=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('es').trim();
-   const localPoint=localStore.read('points').find(p=>key([p.name,p.town,p.province,p.address,p.contact,p.notes].join(' ')).includes(key(q)));
-   if(localPoint){
+   const localPoints=localStore.read('points');
+   const localContacts=localStore.read('contacts');
+   const localContact=localContacts.find(c=>key([c.name,c.role,c.phone,c.email,c.address,c.notes].join(' ')).includes(key(q)));
+   const localPoint=localPoints.find(p=>(localContact&&p.contactRef===localContact.id)||key([p.name,p.town,p.province,p.address,p.contact,p.notes].join(' ')).includes(key(q)));
+   if(localPoint||localContact){
     const lat=Number(localPoint.lat),lng=Number(localPoint.lng),located=localPoint.lat!==''&&localPoint.lng!==''&&Number.isFinite(lat)&&Number.isFinite(lng);
     if(located&&typeof realMap!=='undefined'&&realMap){
      realMap.setView([lat,lng],Math.max(realMap.getZoom(),16));
@@ -1083,7 +1086,7 @@ document.querySelectorAll('[data-page]').forEach(b=>{if(b.tagName==='BUTTON'&&!b
      window.c360SearchMarker.openPopup();
      say('Vendedor encontrado en tus registros: '+localPoint.name+'. Ubicación personal cargada.');
     }else{
-     say('Vendedor encontrado: '+localPoint.name+', pero todavía no tiene coordenadas. Abre Compañeros y pulsa «Añadir al mapa».');
+     say('Contacto encontrado: '+(localPoint.name||localContact?.name)+'. '+(localPoint?'Todavía no tiene coordenadas. Abre Compañeros y pulsa «Marcar ubicación».':'Pulsa «Añadir al mapa» para crear su ubicación.'));
      localStore.go('companeros');
     }
     return;
