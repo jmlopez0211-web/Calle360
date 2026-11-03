@@ -240,3 +240,65 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
 /* Una sola lista de contactos: la agenda personal ofrece búsqueda y acciones completas. */
 #page-contactos #contactRecords{display:none!important}
 #page-contactos #contactForm{margin-bottom:1rem}
+
+
+/* CALLE360 · renovación visual clara, legible y accesible */
+:root{color-scheme:light!important;--paper:#eef4f8!important;--ink:#18364b!important;--muted:#587184!important;--navy:#123b59!important;--line:#d3e0e8!important;--blue:#087db8!important;--teal:#078b83!important;--shadow:0 8px 24px rgba(22,58,82,.09)!important}
+html,body{background:#eef4f8!important;color:#18364b!important}
+body{background:linear-gradient(180deg,#f7fafc 0,#edf3f7 55%,#eaf1f6 100%)!important}
+.top,.brandrow{background:rgba(255,255,255,.97)!important;color:#18364b!important;border-color:#d3e0e8!important;box-shadow:0 3px 16px rgba(22,58,82,.08)!important}
+.brandtitle strong,.brandtitle small{color:#173e5a!important}
+.logo{background:linear-gradient(135deg,#087db8,#10a6a0)!important;color:white!important;box-shadow:0 3px 9px rgba(8,125,184,.2)!important}
+.modulebar button,.leftnav button,.provincechips button,.btn,.personal-btn{background:#fff!important;color:#21465f!important;border:1px solid #cbdbe5!important;box-shadow:0 2px 6px rgba(22,58,82,.05)!important}
+.modulebar button.active,.leftnav button.active,.btn.primary,.personal-btn.primary{background:linear-gradient(120deg,#087db8,#079b9a)!important;color:#fff!important;border-color:#087db8!important;box-shadow:0 4px 12px rgba(8,125,184,.18)!important}
+.modulebar button:hover,.leftnav button:hover,.btn:hover,.personal-btn:hover{background:#e8f5fb!important;color:#075c8d!important;border-color:#79b9d5!important;box-shadow:0 3px 10px rgba(8,125,184,.12)!important}
+.modulebar button.active:hover,.btn.primary:hover,.personal-btn.primary:hover{background:linear-gradient(120deg,#066da5,#07847f)!important;color:#fff!important}
+.layout,.center,.right{background:transparent!important}
+.leftnav{background:#e4edf3!important;border:1px solid #d0dee7!important;box-shadow:0 5px 16px rgba(22,58,82,.07)!important}
+.hero,.personal-dashboard{background:linear-gradient(110deg,#e1f1f8,#e9f7f5 60%,#e4effa)!important;color:#18364b!important;border:1px solid #c7dce7!important;box-shadow:0 6px 20px rgba(22,58,82,.07)!important}
+.hero h1,.hero h2,.hero strong,.personal-dash-title strong{color:#173e5a!important}
+.hero p,.personal-dash-title small{color:#526f82!important}
+.personal-eyebrow{color:#087f82!important}
+.personal-dash-metrics div{background:#fff!important;border:1px solid #d4e3eb!important}
+.personal-dash-metrics b{color:#087db8!important}
+.personal-dash-metrics span{color:#587184!important}
+.mapcard,.card,.modulepage,.personal-panel,.future-strip,.right>.card{background:#fff!important;color:#18364b!important;border:1px solid #d4e0e8!important;box-shadow:0 6px 20px rgba(22,58,82,.07)!important}
+.maphead,.cardhead{background:linear-gradient(100deg,#eaf3f8,#f6fafc)!important;color:#18364b!important;border-color:#d7e3ea!important}
+.maphead strong,.cardhead strong,.modulepage h2,.modulepage h3{color:#173e5a!important}
+.modulepage p,.muted,.field label,.personal-panel p,.personal-panel .muted{color:#587184!important}
+.field input,.field select,.field textarea,.formgrid input,.formgrid select,.formgrid textarea,.search,.personal-contact-search{background:#fff!important;color:#18364b!important;border:1px solid #cbdbe5!important;box-shadow:inset 0 1px 2px rgba(22,58,82,.025)!important}
+.field input::placeholder,.formgrid input::placeholder,.personal-contact-search::placeholder,.search input::placeholder{color:#8297a5!important}
+.field input:focus,.field select:focus,.field textarea:focus,.formgrid input:focus,.formgrid select:focus,.formgrid textarea:focus,.personal-contact-search:focus{border-color:#078bb2!important;box-shadow:0 0 0 3px rgba(8,125,184,.12)!important;outline:none!important}
+.result,.record,.agenda-row,.personal-contact{background:#f8fbfd!important;color:#18364b!important;border:1px solid #d8e4eb!important}
+.result:hover,.personal-contact:hover{background:#eff8fc!important}
+.result b,.record b,.agenda-row b,.personal-contact-info strong{color:#173e5a!important}
+.result small,.record small,.agenda-row small,.personal-contact-info small{color:#587184!important}
+.personal-panel{background:#fff!important}
+.personal-panel h3{color:#173e5a!important}
+.personal-import-status{background:#edf6fa!important;color:#45677c!important;border:1px solid #d7e7ef!important}
+.personal-search-label{color:#42677e!important}
+.personal-contact-search{background:#fff!important;color:#18364b!important}
+.personal-contact{background:#f7fafc!important;border-color:#d6e3eb!important}
+.personal-avatar{background:linear-gradient(135deg,#087db8,#079b9a)!important}
+.personal-empty,.empty{background:#f7fafc!important;color:#587184!important;border-color:#cbdbe5!important}
+.live,.intel-badge{background:#e1f5f2!important;color:#08766f!important;border:1px solid #b8e3dc!important}
+.future-strip{background:#edf4f8!important;color:#587184!important}
+#mapStatus{background:#f2f8fb!important;color:#35566b!important;border-color:#d3e1e8!important}
+#realMap,.real-map-wrap,.real-map-wrap .leaflet-container{background:#e9f1e8!important}
+#realMap .leaflet-tile-pane img,#realMap .leaflet-tile{filter:none!important;opacity:1!important}
+#realMap .leaflet-control-zoom a,#realMap .leaflet-bar a{background:#fff!important;color:#163b53!important;border-color:#cbd9df!important}
+#realMap .leaflet-popup-content-wrapper,#realMap .leaflet-popup-tip{background:#fff!important;color:#18394d!important}
+#realMap .leaflet-control-attribution{background:rgba(255,255,255,.92)!important;color:#334b59!important}
+#realMap .leaflet-control-attribution a,#realMap .leaflet-popup-content a{color:#075f8d!important}
+.personal-contact-actions .personal-btn{background:#fff!important}
+.personal-contact-actions .personal-btn.primary{background:linear-gradient(120deg,#087db8,#079b9a)!important;color:#fff!important}
+.c360-theme-studio{background:#fff!important;color:#18364b!important;border-color:#d4e0e8!important}
+.c360-theme-copy h2{color:#173e5a!important}
+.c360-theme-copy p,.c360-theme-bottom,.c360-theme-empty{color:#587184!important}
+.c360-theme-tags span{background:#e7f6f5!important;color:#08766f!important;border-color:#b8e3dc!important}
+.c360-theme-choice{border-color:#cbdbe5!important}
+.c360-theme-choice small{color:#eaf4fa!important}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #e19a22!important;outline-offset:2px!important}
+a{color:#0875a8}
+@media(max-width:700px){.modulepage{padding:12px!important}.formgrid{gap:9px!important}.formgrid label{min-width:0!important}.personal-contact{align-items:flex-start!important}.personal-contact-actions{padding-left:0!important}.personal-contact-actions .personal-btn{min-height:40px}.modulebar{scrollbar-width:thin}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}

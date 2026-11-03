@@ -8,8 +8,8 @@
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#041f78",
-  "theme_color": "#092e4b",
+  "background_color": "#eef4f8",
+  "theme_color": "#087db8",
   "icons": [
     {
       "src": "./calle360once-192.png",
@@ -43,6 +43,7 @@
             "text/x-vcard",
             "application/vcard",
             "application/x-vcard",
+            "application/octet-stream",
             ".vcf"
           ]
         }

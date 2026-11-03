@@ -28,12 +28,12 @@ test('PWA enlaza y cachea los módulos personales',()=>{
  assert.match(html,/src=["']\.\/personal\.js["']/);
  assert.match(sw,/personal\.css/);
  assert.match(sw,/personal\.js/);
- assert.match(sw,/calle360once-shell-v21/);
+ assert.match(sw,/calle360once-shell-v22/);
  assert.equal(manifest.lang,'es-ES');
  assert.equal(manifest.display,'standalone');
  assert.equal(manifest.share_target.method,'POST');
  assert.equal(manifest.share_target.enctype,'multipart/form-data');
- assert.deepEqual(manifest.share_target.params.files[0].accept,['text/vcard','text/x-vcard','application/vcard','application/x-vcard','.vcf']);
+ assert.deepEqual(manifest.share_target.params.files[0].accept,['text/vcard','text/x-vcard','application/vcard','application/x-vcard','application/octet-stream','.vcf']);
 });
 
 test('contactos: selector compatible, importación VCF y búsqueda local',()=>{
@@ -48,7 +48,7 @@ test('contactos: selector compatible, importación VCF y búsqueda local',()=>{
  assert.match(personal,/contactPhoneKey/);
  assert.match(personal,/isDamagedContactName/);
  assert.match(personal,/_nameNeedsRefresh/);
- assert.match(personal,/Cómo importar desde Samsung/);
+ assert.match(personal,/Importar desde el teléfono/);
  assert.match(personal,/personalContactSearch/);
  assert.match(personal,/data-create-point/);
  assert.match(personal,/data-plan-contact/);
@@ -87,6 +87,9 @@ test('interfaz responsive y tema de centro de operaciones',()=>{
  assert.match(css,/grid-template-columns:68px minmax\(0,1fr\) 285px/);
  assert.match(css,/@media\(max-width:700px\)/);
  assert.match(css,/personal-dashboard/);
+ assert.match(css,/renovación visual clara/);
+ assert.match(css,/color-scheme:light/);
+ assert.match(css,/--paper:#eef4f8/);
  assert.match(css,/map-pin-colleague/);
 });
 
