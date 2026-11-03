@@ -14,7 +14,6 @@ body{background:radial-gradient(ellipse at 50% -20%,#0c4260 0,transparent 46%),#
 .maphead,.cardhead{background:linear-gradient(100deg,#0d2238,#0a192a)!important;border-color:#173754!important}
 .mapwrap{background:#061c31!important}
 #realMap{background:#071726}
-#realMap .leaflet-tile-pane img{filter:invert(1) hue-rotate(180deg) brightness(.72) contrast(1.12) saturate(.72)}
 .leaflet-control-zoom a,.leaflet-bar a{background:#0d2740!important;color:#d9f4ff!important;border-color:#245071!important}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#0d2238!important;color:#e8f5ff!important}
 .leaflet-popup-content a{color:#42d9ff!important}
