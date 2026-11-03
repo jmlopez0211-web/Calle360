@@ -83,18 +83,20 @@ function ensurePanel(){
   const page=$('page-contactos'),module=page&&page.querySelector('.modulepage');
   if(!module||$('personalContactsPanel'))return;
   const panel=document.createElement('section');panel.id='personalContactsPanel';panel.className='personal-panel';
-  panel.innerHTML='<div class="personal-panel-head"><div><span class="personal-eyebrow">AGENDA PERSONAL</span><h3>Mis contactos</h3><p>Selecciona contactos concretos del teléfono o importa una agenda VCF.</p></div><div class="personal-actions"><button type="button" class="personal-btn primary" id="pickPhoneContacts">＋ Elegir del teléfono</button><button type="button" class="personal-btn" id="chooseVcf">Importar archivo VCF</button><input type="file" id="vcfFile" accept=".vcf,text/vcard" hidden></div></div><div class="personal-import-status" id="personalImportStatus" role="status" aria-live="polite">La importación requiere tu selección. No se copia toda la agenda automáticamente.</div><div class="personal-contact-list" id="personalContactList"></div>';
+  panel.innerHTML='<div class="personal-panel-head"><div><span class="personal-eyebrow">AGENDA PERSONAL</span><h3>Mis contactos</h3><p>Selecciona contactos concretos del teléfono o importa una agenda VCF.</p></div><div class="personal-actions"><button type="button" class="personal-btn primary" id="pickPhoneContacts">＋ Elegir del teléfono</button><button type="button" class="personal-btn" id="chooseVcf">Importar archivo VCF</button><input type="file" id="vcfFile" accept=".vcf,text/vcard" hidden></div></div><div class="personal-import-status" id="personalImportStatus" role="status" aria-live="polite">La importación requiere tu selección. No se copia toda la agenda automáticamente.</div><label class="personal-search-label" for="personalContactSearch">Buscar en mis contactos</label><input id="personalContactSearch" class="personal-contact-search" type="search" placeholder="Nombre, teléfono o correo…"><div class="personal-contact-list" id="personalContactList"></div>';
   module.appendChild(panel);
   $('pickPhoneContacts').addEventListener('click',pickPhoneContacts);
   $('chooseVcf').addEventListener('click',()=>$('vcfFile').click());
   $('vcfFile').addEventListener('change',importVcf);
+  $('personalContactSearch').addEventListener('input',renderContacts);
   panel.addEventListener('click',handleContactAction);
 }
 
 function renderContacts(){
   const list=$('personalContactList'),store=api();if(!list||!store)return;
-  const contacts=store.read('contacts').slice().reverse(),points=store.read('points');
-  if(!contacts.length){list.innerHTML='<div class="personal-empty">Todavía no hay contactos importados. Añade solo los que necesites.</div>';return;}
+  const query=($('personalContactSearch')?.value||'').trim().toLocaleLowerCase('es');
+  const contacts=store.read('contacts').slice().reverse().filter(c=>[c.name,c.role,c.phone,c.method,c.email,c.address].join(' ').toLocaleLowerCase('es').includes(query)),points=store.read('points');
+  if(!contacts.length){list.innerHTML='<div class="personal-empty">'+(query?'No hay contactos que coincidan con la búsqueda.':'Todavía no hay contactos importados. Añade solo los que necesites.')+'</div>';return;}
   list.innerHTML=contacts.map(c=>{
     const point=points.find(p=>p.contactRef===c.id);
     const action=point
@@ -102,7 +104,8 @@ function renderContacts(){
       : '<button class="personal-btn primary" data-create-point="'+esc(c.id)+'">＋ Añadir al mapa</button>';
     const plan='<button class="personal-btn" data-plan-contact="'+esc(c.id)+'">＋ Planificar visita</button>';
     const phone=c.phone?'<a class="personal-btn" href="tel:'+encodeURIComponent(c.phone)+'">Llamar</a>':'';
-    return '<article class="personal-contact"><div class="personal-avatar">'+esc((c.name||'?').trim().slice(0,1).toUpperCase())+'</div><div class="personal-contact-info"><strong>'+esc(c.name)+'</strong><small>'+esc([c.role,c.phone||c.method,c.email].filter(Boolean).join(' · ')||'Sin teléfono ni correo')+'</small>'+(c.address?'<small>'+esc(c.address)+'</small>':'')+'</div><div class="personal-contact-actions">'+action+plan+phone+'</div></article>';
+    const navigation=point&&point.lat!==''&&point.lng!==''?'<a class="personal-btn" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(point.lat+','+point.lng)+'&travelmode=driving">Cómo llegar</a>':'';
+    return '<article class="personal-contact"><div class="personal-avatar">'+esc((c.name||'?').trim().slice(0,1).toUpperCase())+'</div><div class="personal-contact-info"><strong>'+esc(c.name)+'</strong><small>'+esc([c.role,c.phone||c.method,c.email].filter(Boolean).join(' · ')||'Sin teléfono ni correo')+'</small>'+(c.address?'<small>'+esc(c.address)+'</small>':'')+'</div><div class="personal-contact-actions">'+action+plan+phone+navigation+'</div></article>';
   }).join('');
 }
 
