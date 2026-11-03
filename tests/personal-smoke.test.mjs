@@ -166,7 +166,7 @@ test('Controles principales tienen áreas táctiles ampliadas',()=>{
 test('transcribe español básico',()=>{
  const mapStart=html.indexOf('const brailleMap=');
  const fnStart=html.indexOf('function convertSpanishBraille(value)',mapStart);
- const end=html.indexOf("\\n$('convertBraille').onclick",fnStart);
+ const end=html.indexOf("\n$('convertBraille').onclick",fnStart);
  const source=html.slice(mapStart,end);
  const convert=new Function(source+';return convertSpanishBraille;')();
  assert.equal(convert('A1 12 áéíóúñ').text,'⠨⠁⠼⠁⠀⠼⠁⠃⠀⠷⠮⠌⠬⠾⠻');
