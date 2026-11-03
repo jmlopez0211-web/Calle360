@@ -59,7 +59,7 @@ test('Málaga es el punto de partida y aparece primero en la guía',()=>{
  assert.match(html,/const provinces=\['Málaga','Almería'/);
  assert.match(html,/setView\(\[36\.7213,-4\.4214\],12\)/);
  const start=html.indexOf('const TOURISM_PLACES = [');
- const end=html.indexOf('\\n];',start);
+ const end=html.indexOf('\n];',start);
  const catalog=html.slice(start,end);
  assert.ok(catalog.indexOf("province:'Málaga'")<catalog.indexOf("province:'Granada'"));
 });
