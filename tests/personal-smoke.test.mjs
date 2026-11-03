@@ -28,7 +28,7 @@ test('PWA enlaza y cachea los módulos personales',()=>{
  assert.match(html,/src=["']\.\/personal\.js["']/);
  assert.match(sw,/personal\.css/);
  assert.match(sw,/personal\.js/);
- assert.match(sw,/calle360once-shell-v23/);
+ assert.match(sw,/calle360once-shell-v24/);
  assert.equal(manifest.lang,'es-ES');
  assert.equal(manifest.display,'standalone');
  assert.equal(manifest.share_target.method,'POST');
@@ -131,4 +131,15 @@ test('marcador puede planificar una visita vinculada al compañero',()=>{
  assert.match(html,/visitColleagueId/);
  assert.match(html,/data-show-colleague/);
  assert.match(html,/colleagueId:p\.id/);
+});
+
+
+test('Busca vendedores guardados antes de llamar a Nominatim',()=>{
+ assert.match(html,/localStore\.read\('points'\)/);
+ assert.match(html,/Vendedor encontrado en tus registros/);
+ assert.match(html,/Buscar vendedor guardado o lugar en el mapa/);
+});
+
+test('Los filtros no ocultan contactos antiguos sin municipio',()=>{
+ assert.match(html,/!r\.town&&!r\.address/);
 });
