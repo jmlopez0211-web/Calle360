@@ -499,7 +499,7 @@ function add(k,r){let a=read(k);a.push({...r,id:Date.now().toString(36)+Math.ran
 function go(p){if(!titles[p])return;document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id==='page-'+p));document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===p));if(p==='inicio'){renderPoints();setTimeout(()=>{if(realMap){realMap.invalidateSize();drawStoredPoints()}},120)}window.scrollTo({top:0,behavior:'smooth'})}
 document.addEventListener('click',e=>{let b=e.target.closest('[data-page]');if(b)go(b.dataset.page)});
 function fillProv(id,all=false){$(id).innerHTML=(all?'<option value="">Todas</option>':'')+provinces.map(p=>`<option>${p}</option>`).join('')}
-['taskProv','visitProv','contactProv','pointProv','issueProv'].forEach(id=>fillProv(id));fillProv('filterProv',true);
+['taskProv','visitProv','contactProv','pointProv','issueProv'].forEach(id=>fillProv(id));fillProv('filterProv',true);$('pointProv').value='Málaga';
 $('provincechips').innerHTML=provinces.map(p=>`<button type="button" data-chip="${p}">${p}</button>`).join('');
 function choose(p){selected=p;document.querySelectorAll('.prov').forEach(x=>x.classList.toggle('selected',x.dataset.prov===p));document.querySelectorAll('[data-chip]').forEach(x=>x.classList.toggle('selected',x.dataset.chip===p));$('filterProv').value=p;renderPoints()}
 document.querySelectorAll('.prov').forEach(x=>{x.addEventListener('click',()=>choose(x.dataset.prov));x.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose(x.dataset.prov)}})});document.querySelectorAll('[data-pin]').forEach(x=>x.addEventListener('click',()=>choose(x.dataset.pin)));
