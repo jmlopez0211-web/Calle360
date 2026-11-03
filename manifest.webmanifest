@@ -40,6 +40,9 @@
           "name": "contacts",
           "accept": [
             "text/vcard",
+            "text/x-vcard",
+            "application/vcard",
+            "application/x-vcard",
             ".vcf"
           ]
         }
