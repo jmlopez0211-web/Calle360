@@ -28,7 +28,7 @@ test('PWA enlaza y cachea los módulos personales',()=>{
  assert.match(html,/src=["']\.\/personal\.js["']/);
  assert.match(sw,/personal\.css/);
  assert.match(sw,/personal\.js/);
- assert.match(sw,/calle360once-shell-v16/);
+ assert.match(sw,/calle360once-shell-v17/);
  assert.equal(manifest.lang,'es-ES');
  assert.equal(manifest.display,'standalone');
 });
@@ -53,4 +53,27 @@ test('interfaz responsive y tema de centro de operaciones',()=>{
  assert.match(css,/@media\(max-width:700px\)/);
  assert.match(css,/personal-dashboard/);
  assert.match(css,/map-pin-colleague/);
+});
+
+test('Málaga es el punto de partida y aparece primero en la guía',()=>{
+ assert.match(html,/const provinces=\['Málaga','Almería'/);
+ assert.match(html,/setView\(\[36\.7213,-4\.4214\],12\)/);
+ const start=html.indexOf('const TOURISM_PLACES = [');
+ const end=html.indexOf('\n];',start);
+ const catalog=html.slice(start,end);
+ assert.ok(catalog.indexOf("province:'Málaga'")<catalog.indexOf("province:'Granada'"));
+});
+
+test('cartografía clara y paneles oscuros separados',()=>{
+ assert.match(css,/#realMap \.leaflet-tile-pane img\{\s*filter:none!important/);
+ assert.doesNotMatch(css,/filter:invert/,'No debe quedar ningún filtro de inversión del mapa');
+ assert.match(css,/#realMap,\s*\.real-map-wrap/);
+ assert.match(css,/\.personal-dashboard/);
+});
+
+test('marcador puede planificar una visita vinculada al compañero',()=>{
+ assert.match(html,/calle360PlanPointVisit/);
+ assert.match(html,/visitColleagueId/);
+ assert.match(html,/data-show-colleague/);
+ assert.match(html,/colleagueId:p\.id/);
 });

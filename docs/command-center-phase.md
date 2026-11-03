@@ -45,3 +45,20 @@ No se puede certificar desde una comprobación estática el selector nativo de c
 ## Estado
 
 Rediseño y mejoras implementadas en rama aislada. No publicar ni fusionar hasta que las pruebas automatizadas y las comprobaciones manuales estén completadas.
+
+
+## Fase de mejora: Málaga y mapa claro
+
+- Málaga se coloca al principio de los selectores de provincia y de la guía turística.
+- La vista inicial del mapa se centra en Málaga (36.7213, -4.4214), con zoom 12.
+- La cartografía vuelve a su color natural: se elimina el filtro de inversión y oscurecimiento de las teselas. Los paneles de control conservan el azul noche.
+- Al volver a la pestaña del mapa, Leaflet recalcula su tamaño y redibuja los marcadores.
+- Los marcadores de compañeros permiten preparar una visita planificada y registrar una visita realizada.
+- Las visitas planificadas guardan el identificador del compañero y desde el historial se puede volver a localizarlo.
+- El registro de visita realizada escribe visita y contador del compañero con reversión si falla el almacenamiento.
+- El service worker pasa a caché v17.
+- Se amplían las pruebas de humo para cubrir Málaga, cartografía clara y vínculo de visitas.
+
+## Verificación pendiente
+
+La revisión de sintaxis y de referencias no demuestra que los mosaicos cartográficos, la geolocalización ni los eventos Leaflet funcionen en todos los navegadores. El mapa debe probarse en el teléfono después de actualizar la PWA. No se debe fusionar ni publicar la rama hasta completar la prueba visual y el flujo de contacto → marcador → visita planificada → visita realizada → historial.

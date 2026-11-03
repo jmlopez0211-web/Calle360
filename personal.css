@@ -14,7 +14,6 @@ body{background:radial-gradient(ellipse at 50% -20%,#0c4260 0,transparent 46%),#
 .maphead,.cardhead{background:linear-gradient(100deg,#0d2238,#0a192a)!important;border-color:#173754!important}
 .mapwrap{background:#061c31!important}
 #realMap{background:#071726}
-#realMap .leaflet-tile-pane img{filter:invert(1) hue-rotate(180deg) brightness(.72) contrast(1.12) saturate(.72)}
 .leaflet-control-zoom a,.leaflet-bar a{background:#0d2740!important;color:#d9f4ff!important;border-color:#245071!important}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#0d2238!important;color:#e8f5ff!important}
 .leaflet-popup-content a{color:#42d9ff!important}
@@ -180,3 +179,60 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
 .map-pin-point{background:linear-gradient(135deg,#28a6ff,#2354ff)!important;box-shadow:0 0 16px #278eff99!important}
 .c360-marker-icon{background:transparent!important;border:0!important}
 .personal-contact-actions a:hover{border-color:#37d9f2;color:white}
+
+
+/* CALLE360 · mapa claro, cartografía natural (solo el mapa; paneles siguen azul noche) */
+#realMap,
+.real-map-wrap,
+.real-map-wrap .leaflet-container{
+  background:#e9f1e8!important;
+}
+#realMap .leaflet-tile-pane img{
+  filter:none!important;
+  opacity:1!important;
+}
+#realMap .leaflet-tile{
+  filter:none!important;
+}
+.real-map-wrap{
+  background:#e8f0e7!important;
+  border:1px solid #c5d6d0!important;
+}
+#realMap .leaflet-control-zoom a,
+#realMap .leaflet-bar a{
+  background:#fff!important;
+  color:#163b53!important;
+  border-color:#cbd9df!important;
+}
+#realMap .leaflet-control-attribution{
+  background:rgba(255,255,255,.88)!important;
+  color:#334b59!important;
+}
+#realMap .leaflet-control-attribution a{color:#075f8d!important}
+#realMap .leaflet-popup-content-wrapper,
+#realMap .leaflet-popup-tip{
+  background:#fff!important;
+  color:#18394d!important;
+}
+#realMap .leaflet-popup-content a{color:#086f9f!important}
+#realMap .leaflet-popup-content button{
+  border:0;border-radius:8px;padding:7px 10px;margin-top:6px;
+  background:#087f75;color:#fff;font-weight:800;cursor:pointer
+}
+#realMap .leaflet-marker-icon{filter:drop-shadow(0 2px 3px #102b3c55)}
+.map-image-label span:first-child{
+  background:#fff!important;color:#24475a!important;border:1px solid #c8d9df!important
+}
+.map-image-label span:last-child{
+  background:#f3fbff!important;color:#24475a!important;border:1px solid #c8d9df!important
+}
+#mapStatus{
+  background:#f7fbff!important;color:#294c60!important;
+  border:1px solid #cbdde5!important;border-radius:9px!important
+}
+.map-pin-colleague{background:linear-gradient(135deg,#00c9a7,#087f75)!important}
+.map-pin-point{background:linear-gradient(135deg,#ffb02e,#ed6c24)!important}
+.personal-dashboard,.personal-panel,.personal-contact{
+  background:#0a192a!important;color:#e8f5ff!important
+}
+.personal-contact-search{background:#071726!important;color:#e8f5ff!important}
