@@ -173,7 +173,7 @@ function createPoint(contactId){
   const store=api();if(!store)return;
   const contact=store.read('contacts').find(c=>c.id===contactId);if(!contact)return;
   const points=store.read('points'),id='p-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8);
-  const point={id,createdAt:new Date().toISOString(),contactRef:contact.id,name:contact.name,town:'',province:contact.province||'',type:'Compañero',address:contact.address||'',schedule:'',contact:contact.phone||contact.method||'',notes:[contact.role,contact.email,contact.notes].filter(Boolean).join(' · '),lat:'',lng:'',visitCount:0};
+  const point={id,createdAt:new Date().toISOString(),contactRef:contact.id,name:contact.name,town:'',province:contact.province||$('filterProv')?.value||$('pointProv')?.value||'Málaga',type:'Compañero',address:contact.address||'',schedule:'',contact:contact.phone||contact.method||'',notes:[contact.role,contact.email,contact.notes].filter(Boolean).join(' · '),lat:'',lng:'',visitCount:0};
   if(store.save('points',points.concat(point))){renderContacts();updateDashboard();store.go('inicio');setTimeout(()=>startMapPlacement(id),350);}
 }
 
@@ -202,7 +202,7 @@ function saveMapPlacement(e){
   point.lat=Number(e.latlng.lat).toFixed(6);point.lng=Number(e.latlng.lng).toFixed(6);
   if(!store.save('points',points))return;
   const el=$('realMap');if(el)el.classList.remove('personal-map-pick');
-  store.drawStoredPoints();store.mapMessage('Ubicación guardada para '+point.name+'. El marcador ya está en el mapa.');
+  store.drawStoredPoints();store.render();store.mapMessage('Ubicación guardada para '+point.name+'. Ya aparece en Resultados y en el mapa.');
   renderContacts();updateDashboard();
 }
 
@@ -241,6 +241,16 @@ function handleContactAction(e){
   if(locate)locatePoint(locate.dataset.locatePoint);
   if(plan)planContactVisit(plan.dataset.planContact);
 }
+
+document.addEventListener('click',e=>{
+  const mapAction=e.target.closest('[data-result-map],[data-show-point]');
+  if(mapAction){locatePoint(mapAction.dataset.resultMap||mapAction.dataset.showPoint);return;}
+  const planAction=e.target.closest('[data-result-visit],[data-plan-point]');
+  if(planAction){const id=planAction.dataset.resultVisit||planAction.dataset.planPoint;if(typeof window.calle360PlanPointVisit==='function')window.calle360PlanPointVisit(id);return;}
+  const visitAction=e.target.closest('[data-visit-point]');
+  if(visitAction&&typeof window.calle360RegisterVisit==='function')window.calle360RegisterVisit(visitAction.dataset.visitPoint);
+});
+
 function init(){
   const store=api();if(!store)return;
   ensurePanel();addDashboard();repairStoredQuotedPrintableNames();renderContacts();updateDashboard();
