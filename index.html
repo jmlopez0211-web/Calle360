@@ -425,7 +425,7 @@ body[data-c360-theme="alien"] .c360-theme-banner{background:radial-gradient(elli
 </div>
 <div class="mapcard"><div class="maphead"><div><strong>Mapa operativo · Málaga primero</strong><small>Ubicaciones personales, compañeros y destinos de visita · OpenStreetMap.</small></div><div class="c360-status" id="c360PersonalInsight" role="status"><i></i><span>Tu espacio personal: registra compañeros y visitas para ver aquí tu actividad.</span></div><div class="maptools"><button class="btn primary" id="startMarkMode">📍 Marcar en mapa</button><button class="btn" id="addColleagueMap">👥 Añadir compañero visitado</button><button class="btn tourism-toggle" id="toggleTourism" aria-pressed="false">✨ Sitios turísticos</button><button class="btn poi-live-btn" id="loadMalagaPOI">🔎 Lugares cerca de Málaga</button><button class="btn poi-live-btn" id="loadAndaluciaPOI">🧭 Buscar por Andalucía</button><button class="btn" id="clearLivePOI">Limpiar búsqueda</button><button class="btn" id="showAll">Toda Andalucía</button><button class="btn" id="myLocation">◎ Mi ubicación</button><button class="btn" id="resetMap">Málaga</button></div></div>
 <div class="mapwrap real-map-wrap">
-<div class="c360-actions" aria-label="Herramientas del mapa"><label class="sr-only" for="c360MapSearch">Buscar lugar en el mapa</label><input id="c360MapSearch" type="search" placeholder="Buscar monumento, pueblo o dirección…" style="flex:1;min-width:180px;padding:11px 13px;border:1px solid #cad9e3;border-radius:12px" autocomplete="off"><button class="btn primary" id="c360MapSearchBtn" type="button">Buscar en mapa</button><button class="btn" id="c360MapFit" type="button">Ver Andalucía</button></div><div id="c360MapSearchStatus" class="c360-status" role="status" aria-live="polite"><i></i><span>Busca un lugar para centrar el mapa y explorar sus alrededores.</span></div><div id="realMap" role="application" aria-label="Mapa interactivo real de Andalucía. Haz clic para marcar un punto cuando actives el modo de marcado."></div>
+<div class="c360-actions" aria-label="Herramientas del mapa"><label class="sr-only" for="c360MapSearch">Buscar vendedor guardado o lugar en el mapa</label><input id="c360MapSearch" type="search" placeholder="Buscar vendedor, monumento, pueblo o dirección…" style="flex:1;min-width:180px;padding:11px 13px;border:1px solid #cad9e3;border-radius:12px" autocomplete="off"><button class="btn primary" id="c360MapSearchBtn" type="button">Buscar en mapa</button><button class="btn" id="c360MapFit" type="button">Ver Andalucía</button></div><div id="c360MapSearchStatus" class="c360-status" role="status" aria-live="polite"><i></i><span>Busca un lugar para centrar el mapa y explorar sus alrededores.</span></div><div id="realMap" role="application" aria-label="Mapa interactivo real de Andalucía. Haz clic para marcar un punto cuando actives el modo de marcado."></div>
 <div class="map-image-label"><span>MAPA REAL · OPENSTREETMAP</span><span>Acerca, desplaza y marca ubicaciones</span></div>
 <div id="mapStatus" class="map-status" role="status" aria-live="polite">Cargando cartografía…</div>
 </div><div class="provincechips" id="provincechips"></div><div class="legend"><span>📍 Tus puntos guardados</span><span>⭐ Lugares de interés turístico</span><span>🗺️ Cartografía real de OpenStreetMap</span></div><section class="tourism-explorer" aria-label="Explorar lugares turísticos"><div class="tourism-title"><div><strong>✨ Descubre Andalucía</strong><small>Selecciona un lugar para centrar el mapa y consultar información.</small></div><span id="tourismCount">más lugares turísticos</span></div><div class="tourism-categories"><button type="button" data-tourfilter="todos" class="selected">Todos</button><button type="button" data-tourfilter="monumentos">🏰 Monumentos</button><button type="button" data-tourfilter="naturaleza">🌿 Naturaleza</button><button type="button" data-tourfilter="costa">🌊 Costa</button><button type="button" data-tourfilter="pueblos">🏘️ Pueblos</button></div><div id="tourismList" class="tourism-list"></div><p class="muted tourism-sources">La guía local es una selección; usa «Buscar por Andalucía» para consultar más lugares en directo. La disponibilidad y cantidad dependen de los datos abiertos y del servicio de búsqueda. Catálogos ampliables desde <a href="https://www.juntadeandalucia.es/datosabiertos/portal/dataset/localizador" target="_blank" rel="noopener">Patrimonio Cultural Andaluz (más de 11.000 elementos georreferenciados)</a> y <a href="https://www.juntadeandalucia.es/datosabiertos/portal/dataset/openrta" target="_blank" rel="noopener">OpenRTA, Registro de Turismo de Andalucía</a>. Los resultados en directo dependen de la cobertura y disponibilidad de cada servicio.</p></section></div>
@@ -526,7 +526,7 @@ function renderPoints(){
  const all=read('points');
  const filtered=all.filter(r=>{
   const rowProvince=searchKey(r.province),locationText=searchKey([r.town,r.province,r.address].filter(Boolean).join(' '));
-  return (!province||!rowProvince||rowProvince===province)&&(!type||r.type===type)&&(!town||locationText.includes(town))&&searchKey([r.name,r.town,r.address,r.province,r.contact,r.notes].join(' ')).includes(q);
+  return (!province||!rowProvince||rowProvince===province)&&(!type||r.type===type)&&(!town||locationText.includes(town)||(!r.town&&!r.address))&&searchKey([r.name,r.town,r.address,r.province,r.contact,r.notes].join(' ')).includes(q);
  });
  $('pointCount').textContent=filtered.length;
  $('pointResults').innerHTML=filtered.length?filtered.slice().reverse().map(r=>{
@@ -535,6 +535,10 @@ function renderPoints(){
  }).join(''):'<div class="empty">No hay resultados con estos filtros. Revisa la provincia y el tipo, o añade un punto.</div>';
  showList('points','pointRecords');
 }
+
+// Mantiene sincronizados los resultados y marcadores al cambiar filtros.
+['filterProv','filterTown','filterType','filterAccess'].forEach(id=>{const el=document.getElementById(id);el?.addEventListener('change',()=>{if(typeof renderPoints==='function')renderPoints();});});
+
 function render(){['tasks','visits','contacts','issues','docs','messages'].forEach(k=>showList(k,({tasks:'taskRecords',visits:'visitRecords',contacts:'contactRecords',issues:'issueRecords',docs:'docRecords',messages:'messageRecords'})[k]));renderPoints();let tasks=read('tasks');$('todayAgenda').innerHTML=tasks.length?tasks.slice().reverse().slice(0,5).map(r=>`<div class="agenda-row"><time>${esc(r.date||'S/F')}</time><div><b>${esc(r.title)}</b><small>${esc([r.province,r.priority].filter(Boolean).join(' · '))}</small></div></div>`).join(''):'<div class="empty">No hay tareas guardadas.</div>';let counts=Object.keys(store).map(k=>`${k}: ${read(k).length}`).join(' · ');$('reportCounts').innerHTML=`<p class="muted">${esc(counts)}</p>`;const pts=read('points'),col=pts.filter(p=>p.type==='Compañero').length,vis=read('visits').length,pending=tasks.filter(t=>!['Realizada','Completada','Hecha'].includes(t.status)).length;const insight=$('c360PersonalInsight');if(insight){const sp=insight.querySelector('span');if(sp)sp.textContent=col===0?'Empieza añadiendo tu primer compañero; después podrás registrar cada visita y conservar su historial.':`Tu actividad personal: ${col} compañero(s), ${vis} visita(s) registrada(s) y ${pending} tarea(s) pendiente(s).`;}$('kpiColleagues')&&($('kpiColleagues').textContent=col);$('kpiVisits')&&($('kpiVisits').textContent=vis);$('kpiTasks')&&($('kpiTasks').textContent=pending);$('kpiPoints')&&($('kpiPoints').textContent=pts.length)}
 function bind(id,k,fields){$(id).addEventListener('submit',e=>{e.preventDefault();let r={};fields.forEach(([id,key])=>r[key]=$(id).value.trim());if(add(k,r))e.target.reset()})}
 bind('taskForm','tasks',[['taskTitle','title'],['taskDate','date'],['taskProv','province'],['taskPriority','priority'],['taskNotes','notes']]);bind('visitForm','visits',[['visitPlace','place'],['visitProv','province'],['visitDate','date'],['visitStatus','status'],['visitNotes','notes'],['visitColleagueId','colleagueId']]);bind('contactForm','contacts',[['contactName','name'],['contactRole','role'],['contactProv','province'],['contactMethod','method'],['contactNotes','notes']]);bind('pointForm','points',[['pointName','name'],['pointTown','town'],['pointProv','province'],['pointType','type'],['pointAddress','address'],['pointSchedule','schedule'],['pointContact','contact'],['pointNotes','notes'],['pointLat','lat'],['pointLng','lng']]);bind('issueForm','issues',[['issueTitle','title'],['issueProv','province'],['issuePriority','priority'],['issueStatus','status'],['issueNotes','notes']]);bind('docForm','docs',[['docTitle','title'],['docCategory','category'],['docLink','link'],['docNotes','notes']]);bind('messageForm','messages',[['messageTitle','title'],['messageDate','date'],['messageBody','notes']]);
@@ -1064,8 +1068,29 @@ document.querySelectorAll('[data-page]').forEach(b=>{if(b.tagName==='BUTTON'&&!b
  async function findPlace(){
   const q=(searchInput?.value||'').trim();
   if(!q){say('Escribe el nombre de un lugar, municipio o dirección.');searchInput?.focus();return;}
-  if(!navigator.onLine){say('No hay conexión a Internet. Comprueba la conexión y vuelve a intentarlo.');return;}
-  say('Buscando «'+q+'»…');
+  // Busca primero en los registros personales, sin depender de Internet.
+  const localStore=window.C360Store;
+  if(localStore&&typeof localStore.read==='function'){
+   const key=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('es').trim();
+   const localPoint=localStore.read('points').find(p=>key([p.name,p.town,p.province,p.address,p.contact,p.notes].join(' ')).includes(key(q)));
+   if(localPoint){
+    const lat=Number(localPoint.lat),lng=Number(localPoint.lng),located=localPoint.lat!==''&&localPoint.lng!==''&&Number.isFinite(lat)&&Number.isFinite(lng);
+    if(located&&typeof realMap!=='undefined'&&realMap){
+     realMap.setView([lat,lng],Math.max(realMap.getZoom(),16));
+     if(window.c360SearchMarker)window.c360SearchMarker.remove();
+     const safe=String(localPoint.name||q).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+     window.c360SearchMarker=L.marker([lat,lng]).addTo(realMap).bindPopup('<strong>'+safe+'</strong><br><small>Vendedor guardado en CALLE360</small>');
+     window.c360SearchMarker.openPopup();
+     say('Vendedor encontrado en tus registros: '+localPoint.name+'. Ubicación personal cargada.');
+    }else{
+     say('Vendedor encontrado: '+localPoint.name+', pero todavía no tiene coordenadas. Abre Compañeros y pulsa «Añadir al mapa».');
+     localStore.go('companeros');
+    }
+    return;
+   }
+  }
+  if(!navigator.onLine){say('No hay conexión a Internet. Tus vendedores guardados sí se pueden buscar; para lugares externos necesitas conexión.');return;}
+  say('Buscando «'+q+'» en OpenStreetMap…');
   if(searchBtn)searchBtn.disabled=true;
   try{
    const url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&country=Spain&q='+encodeURIComponent(q);
