@@ -63,13 +63,13 @@ test('Samsung vCard: decodifica Quoted-Printable UTF-8 y repara nombres guardado
  assert.equal(contacts[0].name,'Fernando Hurtado González');
  assert.equal(contacts[0].tel,'670317074');
  assert.match(personal,/repairStoredQuotedPrintableNames/);
- assert.match(personal,/El teléfono se ha conservado/);
+ assert.match(personal,/se conservarán los teléfonos/);
 });
 
 test('Samsung vCard: admite CR, CRLF y líneas Quoted-Printable partidas',()=>{
  const parserSource=personal.slice(personal.indexOf('function decodeQuotedPrintable'),personal.indexOf('\nfunction normalize'));
  const parseVcf=new Function(parserSource+'; return parseVcf;')();
- const body='BEGIN:VCARD\rVERSION:2.1\rFN;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:=46=65=72=6E=61=6E=64=6F=20=48=75=72=74=61=64=6F=20=47=6F=6E=7A=\rC3=A1=6C=65=7A\rN;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:=48=75=72=74=61=64=6F;=46=65=72=6E=61=6E=64=6F\rTEL;CELL:670317074\rEND:VCARD';
+ const body='BEGIN:VCARD\rVERSION:2.1\rFN;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:=46=65=72=6E=61=6E=64=6F=20=48=75=72=74=61=64=6F=20=47=6F=6E=7A=\r=C3=A1=6C=65=7A\rN;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:=48=75=72=74=61=64=6F;=46=65=72=6E=61=6E=64=6F\rTEL;CELL:670317074\rEND:VCARD';
  const contacts=parseVcf(body);
  assert.equal(contacts.length,1);
  assert.equal(contacts[0].name,'Fernando Hurtado González');
