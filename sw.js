@@ -1,5 +1,5 @@
 /* CALLE360ONCE · caché de la interfaz local. No almacena datos personales ni teselas de mapas. */
-const CACHE = 'calle360once-shell-v19';
+const CACHE = 'calle360once-shell-v20';
 const SHELL = [
   "./",
   "./index.html",
@@ -32,7 +32,9 @@ function saveSharedVCard(file) {
 }
 
 self.addEventListener('fetch', event => {
-  if (event.request.method === 'POST' && new URL(event.request.url).origin === self.location.origin) {
+  const requestUrl = new URL(event.request.url);
+  const shareAction = new URL('./', self.registration.scope);
+  if (event.request.method === 'POST' && requestUrl.origin === self.location.origin && requestUrl.pathname === shareAction.pathname && (event.request.headers.get('content-type') || '').includes('multipart/form-data')) {
     event.respondWith((async()=>{
       try {
         const data=await event.request.formData();
