@@ -100,7 +100,9 @@ function renderContacts(){
     const action=point
       ? '<button class="personal-btn" data-locate-point="'+esc(point.id)+'">'+(point.lat!==''&&point.lng!==''?'Ver en mapa':'Marcar ubicación')+'</button>'
       : '<button class="personal-btn primary" data-create-point="'+esc(c.id)+'">＋ Añadir al mapa</button>';
-    return '<article class="personal-contact"><div class="personal-avatar">'+esc((c.name||'?').trim().slice(0,1).toUpperCase())+'</div><div class="personal-contact-info"><strong>'+esc(c.name)+'</strong><small>'+esc([c.role,c.phone||c.method,c.email].filter(Boolean).join(' · ')||'Sin teléfono ni correo')+'</small>'+(c.address?'<small>'+esc(c.address)+'</small>':'')+'</div><div class="personal-contact-actions">'+action+'</div></article>';
+    const plan='<button class="personal-btn" data-plan-contact="'+esc(c.id)+'">＋ Planificar visita</button>';
+    const phone=c.phone?'<a class="personal-btn" href="tel:'+encodeURIComponent(c.phone)+'">Llamar</a>':'';
+    return '<article class="personal-contact"><div class="personal-avatar">'+esc((c.name||'?').trim().slice(0,1).toUpperCase())+'</div><div class="personal-contact-info"><strong>'+esc(c.name)+'</strong><small>'+esc([c.role,c.phone||c.method,c.email].filter(Boolean).join(' · ')||'Sin teléfono ni correo')+'</small>'+(c.address?'<small>'+esc(c.address)+'</small>':'')+'</div><div class="personal-contact-actions">'+action+plan+phone+'</div></article>';
   }).join('');
 }
 
@@ -144,7 +146,7 @@ function saveMapPlacement(e){
 function addDashboard(){
   const page=$('page-inicio'),hero=page&&page.querySelector('.hero');if(!hero||$('personalDashboard'))return;
   const dash=document.createElement('section');dash.id='personalDashboard';dash.className='personal-dashboard';
-  dash.innerHTML='<div class="personal-dash-title"><span class="personal-eyebrow">ESPACIO PRIVADO · SOLO TÚ</span><strong>Centro de operaciones</strong><small>Tu mapa, tus contactos y tus próximas visitas</small></div><div class="personal-dash-metrics"><div><b id="personalMetricContacts">0</b><span>Contactos</span></div><div><b id="personalMetricPins">0</b><span>Ubicaciones</span></div><div><b id="personalMetricVisits">0</b><span>Visitas</span></div></div>';
+  dash.innerHTML='<div class="personal-dash-title"><span class="personal-eyebrow">CALLE360 COMMAND CENTER · ESPACIO PRIVADO</span><strong>Centro de operaciones</strong><small>Mapa en directo · compañeros · agenda de visitas</small></div><div class="personal-dash-metrics"><div><b id="personalMetricContacts">0</b><span>Contactos</span></div><div><b id="personalMetricPins">0</b><span>Ubicaciones</span></div><div><b id="personalMetricVisits">0</b><span>Visitas</span></div><div><b id="personalMetricPending">0</b><span>Pendientes</span></div></div>';
   hero.insertAdjacentElement('afterend',dash);
 }
 function updateDashboard(){
@@ -152,12 +154,25 @@ function updateDashboard(){
   const contacts=store.read('contacts'),points=store.read('points').filter(p=>p.type==='Compañero'),visits=store.read('visits');
   if($('personalMetricContacts'))$('personalMetricContacts').textContent=contacts.length;
   if($('personalMetricPins'))$('personalMetricPins').textContent=points.filter(p=>p.lat!==''&&p.lng!=='').length;
-  if($('personalMetricVisits'))$('personalMetricVisits').textContent=visits.length;
+  if($('personalMetricVisits'))$('personalMetricVisits').textContent=visits.filter(v=>v.status==='Realizada').length;
+  if($('personalMetricPending'))$('personalMetricPending').textContent=visits.filter(v=>v.status!=='Realizada').length;
+}
+function planContactVisit(contactId){
+  const store=api();if(!store)return;
+  const contact=store.read('contacts').find(c=>c.id===contactId);if(!contact)return;
+  store.go('rutas');
+  const place=$('visitPlace'),date=$('visitDate'),statusField=$('visitStatus'),notes=$('visitNotes');
+  if(place)place.value=contact.name;
+  if(statusField)statusField.value='Planificada';
+  if(notes)notes.value=[contact.role,contact.phone||contact.method,contact.address].filter(Boolean).join(' · ');
+  if(date)date.focus();else if(place)place.focus();
+  status('Visita preparada para '+contact.name+'. Completa la fecha y guarda la visita.');
 }
 function handleContactAction(e){
-  const create=e.target.closest('[data-create-point]'),locate=e.target.closest('[data-locate-point]');
+  const create=e.target.closest('[data-create-point]'),locate=e.target.closest('[data-locate-point]'),plan=e.target.closest('[data-plan-contact]');
   if(create)createPoint(create.dataset.createPoint);
   if(locate)locatePoint(locate.dataset.locatePoint);
+  if(plan)planContactVisit(plan.dataset.planContact);
 }
 function init(){
   const store=api();if(!store)return;
