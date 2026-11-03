@@ -57,7 +57,7 @@ function importContacts(items,source){
 
 async function pickPhoneContacts(){
   if(!navigator.contacts||typeof navigator.contacts.select!=='function'){
-    status('Este navegador no ofrece selector de contactos. Importa un archivo VCF exportado de tu agenda.');return;
+    status('En Android, abre Contactos, selecciona uno o varios contactos y pulsa Compartir > CALLE360. También puedes importar un archivo VCF.');return;
   }
   try{
     const chosen=await navigator.contacts.select(['name','tel','email','address'],{multiple:true});
@@ -66,6 +66,38 @@ async function pickPhoneContacts(){
   }catch(e){
     status(e&&e.name==='SecurityError'?'El selector requiere HTTPS y un navegador compatible.':'No se ha podido abrir la agenda. Prueba con un archivo VCF.');
   }
+}
+
+
+function takeSharedVCard(){
+  return new Promise((resolve,reject)=>{
+    const request=indexedDB.open('calle360-share-target',1);
+    request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('inbox'))request.result.createObjectStore('inbox');};
+    request.onerror=()=>reject(request.error||new Error('No se pudo abrir el buzón de contactos.'));
+    request.onsuccess=()=>{
+      const db=request.result,tx=db.transaction('inbox','readwrite'),box=tx.objectStore('inbox'),get=box.get('latest');
+      let item=null;get.onsuccess=()=>{item=get.result||null;box.delete('latest');};
+      tx.oncomplete=()=>{db.close();resolve(item);};
+      tx.onerror=()=>{const error=tx.error;db.close();reject(error||new Error('No se pudo leer el contacto compartido.'));};
+    };
+  });
+}
+async function handleSharedVCard(){
+  const url=new URL(location.href);
+  if(url.searchParams.has('importSharedContactError')){
+    url.searchParams.delete('importSharedContactError');history.replaceState({},'',url.pathname+url.search+url.hash);
+    status('Android no pudo entregar el contacto. Abre Contactos, selecciona una ficha y usa Compartir > CALLE360.');return;
+  }
+  if(!url.searchParams.has('importSharedContact'))return;
+  url.searchParams.delete('importSharedContact');history.replaceState({},'',url.pathname+url.search+url.hash);
+  try{
+    const item=await takeSharedVCard();
+    if(!item||!item.blob){status('No se recibió ningún archivo de contacto. En Contactos, selecciona una ficha y pulsa Compartir > CALLE360.');return;}
+    const text=await item.blob.text(),items=parseVcf(text);
+    if(!items.length){status('El archivo compartido no contiene una ficha vCard reconocible.');return;}
+    if(confirm('Android ha compartido '+items.length+' contacto(s). ¿Añadirlos a tu agenda privada de CALLE360?'))importContacts(items,'Compartido desde Contactos de Android');
+    else status('Importación cancelada. No se ha añadido ningún contacto.');
+  }catch(error){status(error.message||'No se pudo procesar el contacto compartido.');}
 }
 
 async function importVcf(e){
@@ -83,7 +115,7 @@ function ensurePanel(){
   const page=$('page-contactos'),module=page&&page.querySelector('.modulepage');
   if(!module||$('personalContactsPanel'))return;
   const panel=document.createElement('section');panel.id='personalContactsPanel';panel.className='personal-panel';
-  panel.innerHTML='<div class="personal-panel-head"><div><span class="personal-eyebrow">AGENDA PERSONAL</span><h3>Mis contactos</h3><p>Selecciona contactos concretos del teléfono o importa una agenda VCF.</p></div><div class="personal-actions"><button type="button" class="personal-btn primary" id="pickPhoneContacts">＋ Elegir del teléfono</button><button type="button" class="personal-btn" id="chooseVcf">Importar archivo VCF</button><input type="file" id="vcfFile" accept=".vcf,text/vcard" hidden></div></div><div class="personal-import-status" id="personalImportStatus" role="status" aria-live="polite">La importación requiere tu selección. No se copia toda la agenda automáticamente.</div><label class="personal-search-label" for="personalContactSearch">Buscar en mis contactos</label><input id="personalContactSearch" class="personal-contact-search" type="search" placeholder="Nombre, teléfono o correo…"><div class="personal-contact-list" id="personalContactList"></div>';
+  panel.innerHTML='<div class="personal-panel-head"><div><span class="personal-eyebrow">AGENDA PERSONAL</span><h3>Mis contactos</h3><p>En Android: abre Contactos, selecciona una ficha y pulsa Compartir → CALLE360. También puedes importar un archivo VCF.</p></div><div class="personal-actions"><button type="button" class="personal-btn primary" id="pickPhoneContacts">＋ Elegir del teléfono</button><button type="button" class="personal-btn" id="chooseVcf">Importar archivo VCF</button><input type="file" id="vcfFile" accept=".vcf,text/vcard" hidden></div></div><div class="personal-import-status" id="personalImportStatus" role="status" aria-live="polite">La importación requiere tu selección. No se copia toda la agenda automáticamente.</div><label class="personal-search-label" for="personalContactSearch">Buscar en mis contactos</label><input id="personalContactSearch" class="personal-contact-search" type="search" placeholder="Nombre, teléfono o correo…"><div class="personal-contact-list" id="personalContactList"></div>';
   module.appendChild(panel);
   $('pickPhoneContacts').addEventListener('click',pickPhoneContacts);
   $('chooseVcf').addEventListener('click',()=>$('vcfFile').click());
@@ -184,6 +216,7 @@ function handleContactAction(e){
 function init(){
   const store=api();if(!store)return;
   ensurePanel();addDashboard();renderContacts();updateDashboard();
+  handleSharedVCard();
   if(!window.__c360PersonalRenderWrapped){
     const original=store.render;
     store.render=function(){original();renderContacts();updateDashboard();};
