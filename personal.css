@@ -52,3 +52,122 @@ body{background:radial-gradient(ellipse at 50% -20%,#0c4260 0,transparent 46%),#
 .personal-map-pick{cursor:crosshair!important;outline:3px solid #00d7ef;outline-offset:-3px}
 @media(max-width:850px){.personal-dashboard{align-items:flex-start;flex-direction:column}.personal-dash-metrics{width:100%}.personal-dash-metrics div{flex:1}.personal-panel-head{align-items:flex-start;flex-direction:column}}
 @media(max-width:560px){.personal-dash-title strong{font-size:16px}.personal-contact{align-items:flex-start;flex-wrap:wrap}.personal-contact-info{min-width:calc(100% - 55px)}.personal-contact-actions{width:100%;padding-left:44px}.personal-contact-actions button{flex:1}}
+
+
+/* COMMAND CENTER layout: mapa primero, navegación funcional, paneles compactos */
+:root{color-scheme:dark}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important}
+.top{position:sticky;top:0;z-index:1200}
+.brandrow{min-height:62px}
+.brandtitle strong{letter-spacing:2px}
+.brandtitle small{letter-spacing:.35px}
+.modulebar button,.leftnav button,.btn,.personal-btn{transition:background .18s,border-color .18s,transform .18s,box-shadow .18s}
+.modulebar button:hover,.leftnav button:hover,.btn:hover,.personal-btn:hover{border-color:#29d9f5!important;box-shadow:0 0 14px #00bce533;transform:translateY(-1px)}
+.future-strip{background:#061321!important;color:#7ea6bf!important;letter-spacing:.7px;font-size:10px}
+.layout{display:grid!important;grid-template-columns:68px minmax(0,1fr) 285px!important;gap:12px!important;max-width:1900px;margin:0 auto;padding:12px!important;align-items:start}
+.leftnav{position:sticky;top:82px;border-radius:14px;padding:9px 6px!important;display:flex;flex-direction:column;gap:5px}
+.leftnav button{width:100%;min-height:48px;justify-content:center;border-radius:10px!important;padding:7px 4px!important}
+.leftnav .navtext{display:none!important}
+.leftnav button span{font-size:19px}
+.leftnav .emergency{font-size:9px;padding:10px 2px;margin-top:8px;border-radius:9px;background:#3b1725;color:#ff8ca7}
+.center{min-width:0}
+.right{position:sticky;top:82px;max-height:calc(100vh - 96px);overflow:auto;scrollbar-width:thin}
+.hero{background:linear-gradient(110deg,#0b2943,#0b1b30 58%,#07364a)!important;border:1px solid #1b5b83!important;border-radius:14px!important;padding:14px 18px!important;margin-bottom:10px!important}
+.hero h1{font-size:clamp(18px,2vw,25px)!important;letter-spacing:.3px}
+.hero p{font-size:11px!important;color:#9ab5ca!important}
+.c360-theme-studio,.c360-theme-banner{display:none!important}
+#personalDashboard{margin:8px 0 12px}
+.c360-kpis{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px!important;margin:10px 0 12px!important}
+.c360-kpi{background:linear-gradient(145deg,#0d2740,#091a2c)!important;border:1px solid #1b4b6b!important;border-radius:12px!important;min-height:88px!important;padding:10px!important}
+.c360-kpi strong{color:#48dfff!important;font-size:23px!important}
+.c360-kpi small,.c360-kpi em{color:#8eacc3!important}
+.mapcard{overflow:hidden;border-radius:15px!important}
+.maphead{padding:12px 14px!important}
+.maphead>div:first-child strong{font-size:15px;letter-spacing:.4px}
+.maphead>div:first-child small{color:#8eacc3!important}
+.maptools{display:flex!important;gap:6px!important;flex-wrap:wrap!important}
+.maptools .btn{font-size:10px!important;padding:7px 9px!important;min-height:34px}
+.real-map-wrap{border:1px solid #174b70!important;border-radius:0 0 13px 13px!important}
+#realMap{height:clamp(440px,66vh,760px)!important;min-height:390px!important}
+.c360-actions{background:#081a2b!important;padding:8px!important}
+.c360-actions input{background:#061321!important;color:#eaf8ff!important;border-color:#205274!important}
+.c360-status{color:#8bb5ce!important}
+.map-image-label span{background:#061827eF!important;color:#62e8ff!important;border:1px solid #21658b}
+.map-status{background:#071b2c!important;color:#c7f4ff!important;border:1px solid #1b5b83!important}
+.map-pin{background:linear-gradient(135deg,#00eaff,#087ff5)!important;box-shadow:0 0 16px #00dfff99!important}
+.map-pin span{color:#03111d!important}
+.live-poi-pin{filter:drop-shadow(0 0 8px #00dfff)}
+.legend{color:#8eacc3!important;font-size:10px}
+.provincechips{gap:6px!important}
+.provincechips button{border-radius:20px!important;padding:7px 11px!important;font-size:10px}
+.quickbar{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:7px!important;margin-top:10px!important}
+.quickbar button{min-height:57px!important;border:1px solid #1a4b6d!important;border-radius:10px!important}
+.quickbar .q6{display:none!important}
+.tourism-explorer{background:#091a2b!important;border:1px solid #173d5a!important;border-radius:12px!important;margin-top:12px!important;padding:12px!important}
+.tourism-title strong{color:#dff7ff!important}
+.card{border-radius:12px!important;margin-bottom:10px!important}
+.cardhead{padding:10px 12px!important}
+.cardbody{padding:11px!important}
+.right .cardhead strong{font-size:11px!important;letter-spacing:.5px}
+.right .field{margin-bottom:8px}
+.right .field label{font-size:9px;text-transform:uppercase;letter-spacing:.7px}
+.right .btn{font-size:10px!important}
+.resultlist{max-height:290px;overflow:auto}
+.result{padding:8px!important}
+.agenda-row{padding:7px!important}
+.future-intel .intel-copy{font-size:10px!important}
+.intel-output{font-size:10px!important;line-height:1.5}
+.modulepage{border-radius:14px!important;padding:18px!important}
+.modulepage h2{font-size:20px!important;letter-spacing:.2px}
+.modulepage>p{font-size:11px!important;line-height:1.6}
+.formgrid input,.formgrid select,.formgrid textarea{border-radius:8px!important;padding:10px!important}
+.formgrid label{font-size:10px!important;color:#9ab5ca!important}
+.records{display:grid;gap:7px}
+.record{background:#0b2033!important;border:1px solid #173d5a!important;border-radius:10px!important;padding:10px!important}
+.record small{color:#8eacc3!important}
+.footnote{color:#6889a3!important}
+.personal-dashboard{margin-top:10px!important}
+.personal-dash-metrics{display:grid!important;grid-template-columns:repeat(4,minmax(72px,1fr))!important}
+.personal-dash-metrics div{min-width:0!important}
+.personal-dash-metrics b{font-size:20px!important}
+.personal-contact-actions{justify-content:flex-end}
+.personal-contact-actions a{text-decoration:none;display:inline-flex;align-items:center}
+.personal-contact-info{gap:4px}
+.personal-contact{box-shadow:inset 0 1px #ffffff05}
+#personalContactsPanel{margin-top:14px}
+#personalContactsPanel .personal-panel-head{align-items:center}
+#personalContactsPanel .personal-panel-head>div:first-child{min-width:0}
+@media(max-width:1100px){
+ .layout{grid-template-columns:54px minmax(0,1fr)!important;gap:9px!important}
+ .right{position:static;grid-column:2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:none;overflow:visible}
+ .right>.card{margin:0}
+ .right>.future-intel{grid-column:1/-1}
+}
+@media(max-width:700px){
+ .layout{display:flex!important;flex-direction:column!important;padding:7px!important;gap:8px!important}
+ .leftnav{position:static;order:0;width:100%;display:flex;flex-direction:row;overflow-x:auto;gap:5px;padding:6px!important;scrollbar-width:none}
+ .leftnav button{flex:0 0 44px;width:44px;min-width:44px;min-height:42px}
+ .leftnav .emergency{display:none}
+ .center{width:100%;order:1}
+ .right{position:static;order:2;width:100%;display:grid;grid-template-columns:1fr;max-height:none;overflow:visible}
+ .right>.future-intel{grid-column:auto}
+ .hero{padding:12px!important}
+ .hero h1{font-size:18px!important}
+ .hero p{font-size:10px!important}
+ .c360-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #realMap{height:58vh!important;min-height:390px!important;max-height:620px}
+ .maphead{gap:8px}
+ .maphead>div:first-child{width:100%}
+ .maptools{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .maptools .btn{width:100%;white-space:normal}
+ .c360-actions{display:grid!important;grid-template-columns:1fr auto}
+ .c360-actions input{grid-column:1/-1}
+ .quickbar{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ .personal-dashboard{padding:12px!important}
+ .personal-dash-metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important;width:100%}
+ .personal-dash-metrics div{min-width:0!important}
+ .personal-panel-head{align-items:flex-start!important}
+ .personal-actions{width:100%}
+ .personal-actions button{flex:1}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
