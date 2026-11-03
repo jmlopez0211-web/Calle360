@@ -302,3 +302,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 a{color:#0875a8}
 @media(max-width:700px){.modulepage{padding:12px!important}.formgrid{gap:9px!important}.formgrid label{min-width:0!important}.personal-contact{align-items:flex-start!important}.personal-contact-actions{padding-left:0!important}.personal-contact-actions .personal-btn{min-height:40px}.modulebar{scrollbar-width:thin}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+
+
+/* Resultados vinculados: acciones visibles y adaptables en móvil */
+.point-result{align-items:flex-start!important}
+.point-result-main{min-width:0;flex:1}
+.point-result-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.point-result-actions .btn{min-height:34px;padding:7px 9px;font-size:10px}
+@media(max-width:560px){.point-result-actions{display:grid;grid-template-columns:1fr 1fr}.point-result-actions .btn{width:100%;white-space:normal}}

@@ -28,7 +28,7 @@ test('PWA enlaza y cachea los módulos personales',()=>{
  assert.match(html,/src=["']\.\/personal\.js["']/);
  assert.match(sw,/personal\.css/);
  assert.match(sw,/personal\.js/);
- assert.match(sw,/calle360once-shell-v22/);
+ assert.match(sw,/calle360once-shell-v23/);
  assert.equal(manifest.lang,'es-ES');
  assert.equal(manifest.display,'standalone');
  assert.equal(manifest.share_target.method,'POST');
@@ -114,6 +114,16 @@ test('cartografía clara y paneles oscuros separados',()=>{
  assert.doesNotMatch(css,/filter:invert/,'No debe quedar ningún filtro de inversión del mapa');
  assert.match(css,/#realMap,\s*\.real-map-wrap/);
  assert.match(css,/\.personal-dashboard/);
+});
+
+test('puntos guardados aparecen en resultados con filtros y acciones',()=>{
+ assert.match(html,/data-result-map/);
+ assert.match(html,/data-result-visit/);
+ assert.match(html,/data-show-point/);
+ assert.match(html,/!rowProvince\|\|rowProvince===province/);
+ assert.match(html,/\$\('pointProv'\)\.value='Málaga'/);
+ assert.match(personal,/store\.render\(\);store\.mapMessage\('Ubicación guardada para '/);
+ assert.match(personal,/data-plan-point/);
 });
 
 test('marcador puede planificar una visita vinculada al compañero',()=>{
