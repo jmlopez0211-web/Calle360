@@ -50,6 +50,18 @@ test('contactos: selector compatible, importación VCF y búsqueda local',()=>{
  assert.match(personal,/data-plan-contact/);
 });
 
+test('Samsung vCard: decodifica Quoted-Printable UTF-8 y repara nombres guardados',()=>{
+ const parserSource=personal.slice(personal.indexOf('function decodeQuotedPrintable'),personal.indexOf('\nfunction normalize'));
+ const parseVcf=new Function(parserSource+'; return parseVcf;')();
+ const sample='BEGIN:VCARD\r\nVERSION:2.1\r\nFN;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:=46=65=72=6E=61=6E=64=6F=20=48=75=72=74=61=64=6F=20=47=6F=6E=7A=C3=A1=6C=65=7A\r\nTEL;CELL:670317074\r\nEND:VCARD';
+ const contacts=parseVcf(sample);
+ assert.equal(contacts.length,1);
+ assert.equal(contacts[0].name,'Fernando Hurtado González');
+ assert.equal(contacts[0].tel,'670317074');
+ assert.match(personal,/repairStoredQuotedPrintableNames/);
+ assert.match(personal,/El teléfono se ha conservado/);
+});
+
 test('mapa: ubicación del compañero y navegación se mantienen locales',()=>{
  assert.match(personal,/startMapPlacement/);
  assert.match(personal,/saveMapPlacement/);
