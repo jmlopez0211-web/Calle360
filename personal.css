@@ -236,3 +236,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
   background:#0a192a!important;color:#e8f5ff!important
 }
 .personal-contact-search{background:#071726!important;color:#e8f5ff!important}
+
+/* Una sola lista de contactos: la agenda personal ofrece búsqueda y acciones completas. */
+#page-contactos #contactRecords{display:none!important}
+#page-contactos #contactForm{margin-bottom:1rem}
