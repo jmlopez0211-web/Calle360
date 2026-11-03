@@ -8,14 +8,31 @@ let pendingPointId = null;
 
 function status(message){const el=$('personalImportStatus');if(el)el.textContent=message;}
 
+function decodeQuotedPrintable(value,charset='utf-8'){
+  const bytes=[];
+  for(let i=0;i<value.length;i++){
+    if(value[i]==='=' && /^[0-9a-f]{2}$/i.test(value.slice(i+1,i+3))){
+      bytes.push(parseInt(value.slice(i+1,i+3),16));i+=2;
+    }else{
+      const code=value.charCodeAt(i);
+      if(code<=0x7f)bytes.push(code);
+      else bytes.push(...new TextEncoder().encode(value[i]));
+    }
+  }
+  try{return new TextDecoder(charset,{fatal:false}).decode(new Uint8Array(bytes));}
+  catch(e){return new TextDecoder('utf-8').decode(new Uint8Array(bytes));}
+}
 function parseVcf(text){
-  const unfolded=text.replace(/\r?\n[ \t]/g,'');
+  const unfolded=text.replace(/\r\n[ \t]/g,'').replace(/\n[ \t]/g,'').replace(/=\r?\n/g,'');
   return unfolded.split(/BEGIN:VCARD/i).slice(1).map(chunk=>{
     const out={};
     chunk.split(/\r?\n/).forEach(line=>{
       const i=line.indexOf(':');if(i<0)return;
-      const key=line.slice(0,i).split(';')[0].toUpperCase();
-      const value=line.slice(i+1).replace(/\\[nN]/g,'\n').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\\\/g,'\\').trim();
+      const header=line.slice(0,i),raw=line.slice(i+1),parts=header.split(';');
+      const key=parts.shift().split('.').pop().toUpperCase();
+      const params=parts.map(part=>part.split('=')).reduce((o,p)=>{if(p.length>1)o[p[0].toUpperCase()]=p.slice(1).join('=').replace(/^"|"$/g,'');return o;},{});
+      let value=params.ENCODING?.toUpperCase()==='QUOTED-PRINTABLE'?decodeQuotedPrintable(raw,params.CHARSET||'utf-8'):raw;
+      value=value.replace(/\\[nN]/g,'\n').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\\\/g,'\\').trim();
       if(key==='FN')out.name=value;
       if(key==='N'&&!out.name)out.name=value.split(';').filter(Boolean).reverse().join(' ');
       if(key==='TEL'&&!out.tel)out.tel=value;
@@ -53,6 +70,23 @@ function importContacts(items,source){
   });
   if(!added.length){status('No hay contactos nuevos; los duplicados se han omitido.');return;}
   if(store.save('contacts',existing.concat(added))){renderContacts();updateDashboard();status(added.length+' contacto(s) importado(s). Los datos permanecen en este dispositivo.');}
+}
+
+function repairStoredQuotedPrintableNames(){
+  const store=api();if(!store)return;
+  const contacts=store.read('contacts');let changed=0;
+  contacts.forEach(contact=>{
+    if(typeof contact.name==='string' && /(?:=[0-9a-f]{2}){2,}/i.test(contact.name)){
+      const decoded=decodeQuotedPrintable(contact.name,'utf-8').trim();
+      if(decoded && decoded!==contact.name && !/=(?:[0-9a-f]{2})/i.test(decoded)){
+        contact.name=decoded;changed++;
+      }
+    }
+  });
+  if(changed && store.save('contacts',contacts)){
+    renderContacts();updateDashboard();
+    status(changed+' contacto(s) reparado(s): nombre descodificado correctamente. El teléfono se ha conservado.');
+  }
 }
 
 async function pickPhoneContacts(){
@@ -215,7 +249,7 @@ function handleContactAction(e){
 }
 function init(){
   const store=api();if(!store)return;
-  ensurePanel();addDashboard();renderContacts();updateDashboard();
+  ensurePanel();addDashboard();repairStoredQuotedPrintableNames();renderContacts();updateDashboard();
   handleSharedVCard();
   if(!window.__c360PersonalRenderWrapped){
     const original=store.render;
