@@ -39,6 +39,8 @@ test('PWA enlaza y cachea los módulos personales',()=>{
 test('contactos: selector compatible, importación VCF y búsqueda local',()=>{
  assert.match(personal,/navigator\.contacts\.select/);
  assert.match(personal,/handleSharedVCard/);
+ assert.match(personal,/Importar desde Contactos/);
+ assert.match(personal,/Compartir y elige CALLE360/);
  assert.match(personal,/takeSharedVCard/);
  assert.match(sw,/request\.formData\(\)/);
  assert.match(sw,/saveSharedVCard/);
