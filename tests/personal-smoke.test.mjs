@@ -66,6 +66,7 @@ test('Málaga es el punto de partida y aparece primero en la guía',()=>{
 
 test('cartografía clara y paneles oscuros separados',()=>{
  assert.match(css,/#realMap \.leaflet-tile-pane img\{\s*filter:none!important/);
+ assert.doesNotMatch(css,/filter:invert/,'No debe quedar ningún filtro de inversión del mapa');
  assert.match(css,/#realMap,\s*\.real-map-wrap/);
  assert.match(css,/\.personal-dashboard/);
 });
