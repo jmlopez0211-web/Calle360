@@ -240,3 +240,100 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
 /* Una sola lista de contactos: la agenda personal ofrece búsqueda y acciones completas. */
 #page-contactos #contactRecords{display:none!important}
 #page-contactos #contactForm{margin-bottom:1rem}
+
+
+/* CALLE360 2026 · Tema claro de alto contraste, optimizado para móvil */
+:root{
+  color-scheme:light!important;
+  --paper:#edf3f8!important;--ink:#18364b!important;--muted:#60798b!important;
+  --navy:#123b59!important;--line:#d3e0e8!important;--teal:#087f83!important;
+  --blue:#176fb4!important;--shadow:0 5px 18px rgba(22,54,77,.09)!important;
+}
+html,body{background:#edf3f8!important;color:#18364b!important}
+body{background:linear-gradient(180deg,#e8f1f8 0,#f4f7fa 360px,#edf3f8 100%)!important}
+.top,.brandrow{background:rgba(255,255,255,.97)!important;color:#18364b!important;border-color:#d3e0e8!important}
+.top{box-shadow:0 4px 18px rgba(23,57,80,.08)!important}
+.brandtitle strong,.maphead strong,.cardhead strong,.modulepage h2,.modulepage h3{color:#153d5b!important}
+.brandtitle small,.modulepage p,.muted,.field label,.personal-contact-info small{color:#60798b!important}
+.logo{background:linear-gradient(135deg,#087f83,#176fb4)!important;color:#fff!important}
+.modulebar button,.leftnav button,.provincechips button,.btn{
+  background:#f7fafc!important;color:#244b65!important;border:1px solid #cfdee7!important;
+}
+.modulebar button.active,.leftnav button.active,.btn.primary{
+  background:linear-gradient(120deg,#087f83,#1687b6)!important;color:#fff!important;border-color:#087f83!important;
+}
+.leftnav,.mapcard,.card,.modulepage,.personal-panel,.future-strip,.tourism-explorer{
+  background:#fff!important;color:#18364b!important;border-color:#d3e0e8!important;
+}
+.layout{background:transparent!important}
+.mapcard,.card,.modulepage{box-shadow:0 5px 18px rgba(22,54,77,.08)!important;border:1px solid #d3e0e8!important}
+.maphead,.cardhead{background:linear-gradient(100deg,#f5f9fc,#eaf2f7)!important;border-color:#d3e0e8!important}
+.mapwrap{background:#e7f0ed!important}
+#realMap,.real-map-wrap,.real-map-wrap .leaflet-container{background:#e9f1e8!important}
+#realMap .leaflet-tile-pane img,#realMap .leaflet-tile{filter:none!important;opacity:1!important}
+#realMap .leaflet-control-zoom a,#realMap .leaflet-bar a{background:#fff!important;color:#163b53!important;border-color:#cbd9df!important}
+#realMap .leaflet-control-attribution{background:rgba(255,255,255,.92)!important;color:#334b59!important}
+#realMap .leaflet-control-attribution a{color:#075f8d!important}
+#realMap .leaflet-popup-content-wrapper,#realMap .leaflet-popup-tip{background:#fff!important;color:#18394d!important}
+#realMap .leaflet-popup-content a{color:#086f9f!important}
+.field input,.field select,.field textarea,.formgrid input,.formgrid select,.formgrid textarea,.search,
+.personal-contact-search{
+  background:#fff!important;color:#18364b!important;border:1px solid #cbdbe5!important;
+}
+.field input::placeholder,.search input::placeholder,.personal-contact-search::placeholder{color:#7890a0!important}
+.result,.record,.agenda-row{border-color:#e0e8ed!important}
+.result:hover{background:#f1f7fa!important}
+.result b,.record b,.agenda-row b{color:#183d58!important}
+.result small,.record small,.agenda-row small{color:#60798b!important}
+.live,.intel-badge{background:#e1f4f0!important;color:#087b70!important}
+.future-strip{border-bottom:1px solid #d3e0e8!important;color:#60798b!important}
+.personal-dashboard{
+  background:linear-gradient(110deg,#e7f3fa,#f7fbfd 58%,#e3f4f2)!important;
+  border:1px solid #c8dce7!important;box-shadow:0 5px 18px rgba(22,54,77,.08)!important;
+}
+.personal-dash-title strong{color:#153d5b!important}
+.personal-dash-title small{color:#60798b!important}
+.personal-eyebrow{color:#087f83!important}
+.personal-dash-metrics div{background:#fff!important;border:1px solid #d3e0e8!important}
+.personal-dash-metrics b{color:#087f83!important}
+.personal-dash-metrics span{color:#60798b!important}
+.personal-panel{background:#fff!important;border:1px solid #d3e0e8!important;box-shadow:0 5px 18px rgba(22,54,77,.06)!important}
+.personal-panel h3{color:#153d5b!important}
+.personal-panel p{color:#60798b!important}
+.personal-btn{background:#f2f7fa!important;border:1px solid #cbdbe5!important;color:#244b65!important}
+.personal-btn.primary{background:linear-gradient(120deg,#087f83,#1687b6)!important;border-color:#087f83!important;color:#fff!important}
+.personal-import-status{background:#edf5f8!important;color:#496b80!important}
+.personal-contact{background:#f8fbfd!important;border:1px solid #dce7ed!important}
+.personal-contact-info strong{color:#183d58!important}
+.personal-contact-info small{color:#60798b!important}
+.personal-empty{border-color:#cbdbe5!important;color:#60798b!important}
+.personal-search-label{color:#496b80!important}
+.personal-contact-search:focus{border-color:#1687b6!important;box-shadow:0 0 0 3px #1687b622!important}
+.personal-dashboard,.personal-panel,.personal-contact{color:#18364b!important}
+#page-contactos #contactRecords{display:none!important}
+#page-contactos #contactForm{margin-bottom:1rem}
+.c360-kpi{background:linear-gradient(145deg,#fff,#eaf3f8)!important;border:1px solid #d3e0e8!important;box-shadow:0 3px 12px rgba(22,54,77,.06)!important}
+.c360-kpi strong{color:#087f83!important}
+.c360-kpi small,.c360-kpi em{color:#60798b!important}
+.c360-actions{background:#f1f6f9!important}
+.c360-actions input{background:#fff!important;color:#18364b!important;border-color:#cbdbe5!important}
+.c360-status,.legend,.footnote{color:#60798b!important}
+.map-image-label span,.map-image-label span:first-child,.map-image-label span:last-child{
+  background:#fff!important;color:#24475a!important;border:1px solid #c8d9df!important
+}
+.map-status,#mapStatus{background:#f7fbff!important;color:#294c60!important;border:1px solid #cbdde5!important}
+.tourism-explorer{background:#fff!important;border:1px solid #d3e0e8!important}
+.tourism-title strong{color:#153d5b!important}
+.record{background:#f8fbfd!important;border:1px solid #dce7ed!important}
+.personal-contact-actions a{text-decoration:none;display:inline-flex;align-items:center}
+.personal-contact-actions a:hover{border-color:#1687b6!important;color:#087f83!important}
+.emergency{background:#a82e3b!important;color:#fff!important}
+@media(max-width:700px){
+  .layout{background:transparent!important}
+  .leftnav{background:#fff!important;border:1px solid #d3e0e8!important}
+  .right>.card,.right>.future-intel{background:#fff!important}
+  .personal-panel-head{align-items:flex-start!important}
+}
+@media(prefers-color-scheme:dark){
+  :root{color-scheme:light!important}
+}
