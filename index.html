@@ -788,14 +788,14 @@ function toggleTourism(){
 let c360CurrentLocationMarker=null;
 let realMap=null, pointMarkers=[], markMode=false;
 function mapMessage(msg){const el=$('mapStatus');if(el)el.textContent=msg}
-function createPinIcon(label='📍'){return L.divIcon({className:'',html:`<div class="map-pin"><span>${label}</span></div>`,iconSize:[30,36],iconAnchor:[15,34],popupAnchor:[0,-32]})}
+function createPinIcon(label='📍',kind='point'){return L.divIcon({className:'c360-marker-icon c360-marker-'+kind,html:`<div class="map-pin map-pin-${kind}"><span>${label}</span></div>`,iconSize:[34,40],iconAnchor:[17,38],popupAnchor:[0,-34]})}
 function drawStoredPoints(){
  if(!realMap)return;
  pointMarkers.forEach(m=>realMap.removeLayer(m));pointMarkers=[];
  read('points').forEach(p=>{
   const lat=Number(p.lat),lng=Number(p.lng);
   if(Number.isFinite(lat)&&Number.isFinite(lng)&&Math.abs(lat)<=90&&Math.abs(lng)<=180&&p.lat!==''&&p.lng!==''){
-   const marker=L.marker([lat,lng],{icon:createPinIcon(p.type==='Compañero'?'👥':'📍')}).addTo(realMap);
+   const marker=L.marker([lat,lng],{icon:createPinIcon(p.type==='Compañero'?'👥':'📍',p.type==='Compañero'?'colleague':'point')}).addTo(realMap);
    marker.bindPopup(`<strong>${esc(p.name)}</strong><br>${esc([p.town,p.province,p.address].filter(Boolean).join(' · '))}<br><small>${lat.toFixed(5)}, ${lng.toFixed(5)}</small>${p.type==='Compañero'?`<br><button type="button" onclick="window.calle360RegisterVisit('${esc(p.id)}')">✓ Registrar visita</button>`:''}`);
    pointMarkers.push(marker);
   }
