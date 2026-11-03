@@ -11,34 +11,36 @@ function status(message){const el=$('personalImportStatus');if(el)el.textContent
 function decodeQuotedPrintable(value,charset='utf-8'){
   const bytes=[];
   for(let i=0;i<value.length;i++){
-    if(value[i]==='=' && /^[0-9a-f]{2}$/i.test(value.slice(i+1,i+3))){
-      bytes.push(parseInt(value.slice(i+1,i+3),16));i+=2;
-    }else{
-      const code=value.charCodeAt(i);
-      if(code<=0x7f)bytes.push(code);
-      else bytes.push(...new TextEncoder().encode(value[i]));
-    }
+    if(value[i]==='=' && /^[0-9a-f]{2}$/i.test(value.slice(i+1,i+3))){bytes.push(parseInt(value.slice(i+1,i+3),16));i+=2;}
+    else{const cp=value.codePointAt(i);if(cp<=0x7f)bytes.push(cp);else{bytes.push(...new TextEncoder().encode(String.fromCodePoint(cp)));if(cp>0xffff)i++;}}
   }
   try{return new TextDecoder(charset,{fatal:false}).decode(new Uint8Array(bytes));}
-  catch(e){return new TextDecoder('utf-8').decode(new Uint8Array(bytes));}
+  catch(e){return new TextDecoder('utf-8',{fatal:false}).decode(new Uint8Array(bytes));}
 }
 function parseVcf(text){
-  const unfolded=text.replace(/\r\n[ \t]/g,'').replace(/\n[ \t]/g,'').replace(/=\r?\n/g,'');
-  return unfolded.split(/BEGIN:VCARD/i).slice(1).map(chunk=>{
+  const physical=String(text||'').replace(/\r\n?/g,'\n').split('\n'),lines=[];
+  for(const line of physical){
+    if(!lines.length){lines.push(line);continue;}
+    const previous=lines[lines.length-1],colon=previous.indexOf(':'),header=colon>=0?previous.slice(0,colon):'';
+    const qp=/;ENCODING="?QUOTED-PRINTABLE"?/i.test(header),isProperty=/^(?:BEGIN|END|[A-Z0-9.-]+)(?:;[^:]*)?:/i.test(line);
+    if(qp&&previous.endsWith('=')&&!isProperty)lines[lines.length-1]=previous.slice(0,-1)+line;
+    else if(/^[ \t]/.test(line))lines[lines.length-1]+=line.slice(1);
+    else{if(qp&&previous.endsWith('='))lines[lines.length-1]=previous.slice(0,-1);lines.push(line);}
+  }
+  return lines.join('\n').split(/BEGIN:VCARD/i).slice(1).map(chunk=>{
     const out={};
-    chunk.split(/\r?\n/).forEach(line=>{
+    chunk.split('\n').forEach(line=>{
       const i=line.indexOf(':');if(i<0)return;
-      const header=line.slice(0,i),raw=line.slice(i+1),parts=header.split(';');
-      const key=parts.shift().split('.').pop().toUpperCase();
+      const header=line.slice(0,i),raw=line.slice(i+1),parts=header.split(';'),key=parts.shift().split('.').pop().toUpperCase();
       const params=parts.map(part=>part.split('=')).reduce((o,p)=>{if(p.length>1)o[p[0].toUpperCase()]=p.slice(1).join('=').replace(/^"|"$/g,'');return o;},{});
-      let value=params.ENCODING?.toUpperCase()==='QUOTED-PRINTABLE'?decodeQuotedPrintable(raw,params.CHARSET||'utf-8'):raw;
+      const qp=params.ENCODING?.toUpperCase()==='QUOTED-PRINTABLE';
+      let value=qp?decodeQuotedPrintable(raw.replace(/=$/,'').replace(/=\n/g,''),params.CHARSET||'utf-8'):raw;
       value=value.replace(/\\[nN]/g,'\n').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\\\/g,'\\').trim();
       if(key==='FN')out.name=value;
-      if(key==='N'&&!out.name)out.name=value.split(';').filter(Boolean).reverse().join(' ');
-      if(key==='TEL'&&!out.tel)out.tel=value;
+      if(key==='N'){const n=value.split(';'),structured=[n[1],n[0],n[2],n[3],n[4]].filter(Boolean).join(' ').trim();if(!out.name||out.name.endsWith('='))out.name=structured;}
+      if(key==='TEL'&&!out.tel)out.tel=value.replace(/^tel:/i,'');
       if(key==='EMAIL'&&!out.email)out.email=value;
-      if(key==='ORG')out.org=value;
-      if(key==='TITLE')out.role=value;
+      if(key==='ORG')out.org=value;if(key==='TITLE')out.role=value;
       if(key==='ADR'&&!out.address)out.address=value.split(';').filter(Boolean).join(', ');
     });
     return out;
@@ -46,47 +48,39 @@ function parseVcf(text){
 }
 
 function normalize(c){
-  const first=v=>Array.isArray(v)?v[0]:v;
-  return {
-    name:String(first(c.name||c.fn)||'Contacto sin nombre').trim(),
-    role:String(c.role||c.org||'').trim(),
-    province:'',
-    method:String(first(c.tel)||first(c.email)||'').trim(),
-    phone:String(first(c.tel)||'').trim(),
-    email:String(first(c.email)||'').trim(),
-    address:typeof first(c.address)==='string'?first(c.address):'',
-    notes:'Importado desde la agenda del teléfono'
-  };
+  const first=v=>Array.isArray(v)?v[0]:v,clean=v=>String(first(v)||'').trim();
+  return {name:clean(c.name||c.fn)||'Contacto sin nombre',role:clean(c.role||c.org),province:'',method:clean(c.tel)||clean(c.email),phone:clean(c.tel),email:clean(c.email),address:clean(c.address),notes:'Importado desde la agenda del teléfono'};
 }
-
+function contactPhoneKey(c){return String(c.phone||c.method||'').replace(/\D/g,'');}
+function contactNameKey(value){return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('es').replace(/\s+/g,' ').trim();}
+function isDamagedContactName(contact){const name=String(contact.name||'');return !!contact._nameNeedsRefresh||name.endsWith('=')||/(?:=[0-9a-f]{2}){2,}/i.test(name);}
 function importContacts(items,source){
-  const store=api();if(!store)return;
-  const existing=store.read('contacts');
-  const keys=new Set(existing.map(c=>(c.name||'').toLocaleLowerCase('es')+'|'+(c.phone||c.method||'').replace(/\s/g,'')));
-  const added=[];
+  const store=api();if(!store)return;const existing=store.read('contacts'),added=[];let updated=0;
   items.map(normalize).forEach(c=>{
-    const key=c.name.toLocaleLowerCase('es')+'|'+(c.phone||c.method||'').replace(/\s/g,'');
-    if(!keys.has(key)){keys.add(key);added.push({...c,id:'c-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8),createdAt:new Date().toISOString(),source});}
+    const phone=contactPhoneKey(c),name=contactNameKey(c.name);
+    const match=existing.find(old=>{const oldPhone=contactPhoneKey(old);return(phone.length>=7&&oldPhone.length>=7&&phone===oldPhone)||(name&&contactNameKey(old.name)===name);});
+    if(match){
+      if(isDamagedContactName(match)&&c.name&&!isDamagedContactName(c)){match.name=c.name;delete match._nameNeedsRefresh;updated++;}
+      [['phone','phone'],['email','email'],['address','address'],['role','role'],['method','method']].forEach(([field,key])=>{if(!match[field]&&c[key]){match[field]=c[key];updated++;}});
+      return;
+    }
+    const item={...c,id:'c-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8),createdAt:new Date().toISOString(),source};
+    added.push(item);existing.push(item);
   });
-  if(!added.length){status('No hay contactos nuevos; los duplicados se han omitido.');return;}
-  if(store.save('contacts',existing.concat(added))){renderContacts();updateDashboard();status(added.length+' contacto(s) importado(s). Los datos permanecen en este dispositivo.');}
+  if(!added.length&&!updated){status('No hay contactos nuevos; los duplicados se han omitido.');return;}
+  if(store.save('contacts',existing)){renderContacts();updateDashboard();status([added.length?added.length+' contacto(s) importado(s)':null,updated?updated+' dato(s) actualizado(s) en contactos existentes':null].filter(Boolean).join('. ')+'. Los datos permanecen en este dispositivo.');}
 }
 
 function repairStoredQuotedPrintableNames(){
-  const store=api();if(!store)return;
-  const contacts=store.read('contacts');let changed=0;
+  const store=api();if(!store)return;const contacts=store.read('contacts');let changed=0,needsRefresh=0;
   contacts.forEach(contact=>{
-    if(typeof contact.name==='string' && /(?:=[0-9a-f]{2}){2,}/i.test(contact.name)){
+    if(typeof contact.name!=='string')return;
+    if(/(?:=[0-9a-f]{2}){2,}/i.test(contact.name)){
       const decoded=decodeQuotedPrintable(contact.name,'utf-8').trim();
-      if(decoded && decoded!==contact.name && !/=(?:[0-9a-f]{2})/i.test(decoded)){
-        contact.name=decoded;changed++;
-      }
-    }
+      if(decoded&&decoded!==contact.name){contact.name=decoded;if(contact.name.endsWith('=')){contact.name=contact.name.slice(0,-1).trim();contact._nameNeedsRefresh=true;needsRefresh++;}changed++;}
+    }else if(contact.name.endsWith('=')){contact.name=contact.name.slice(0,-1).trim();contact._nameNeedsRefresh=true;changed++;needsRefresh++;}
   });
-  if(changed && store.save('contacts',contacts)){
-    renderContacts();updateDashboard();
-    status(changed+' contacto(s) reparado(s): nombre descodificado correctamente. El teléfono se ha conservado.');
-  }
+  if(changed&&store.save('contacts',contacts)){renderContacts();updateDashboard();status(needsRefresh?changed+' nombre(s) limpiado(s). Comparte de nuevo la ficha para recuperar cualquier final que Samsung hubiera cortado; se conservarán los teléfonos.':changed+' contacto(s) descodificado(s).');}
 }
 
 async function pickPhoneContacts(){
@@ -149,7 +143,7 @@ function ensurePanel(){
   const page=$('page-contactos'),module=page&&page.querySelector('.modulepage');
   if(!module||$('personalContactsPanel'))return;
   const panel=document.createElement('section');panel.id='personalContactsPanel';panel.className='personal-panel';
-  panel.innerHTML='<div class="personal-panel-head"><div><span class="personal-eyebrow">AGENDA PERSONAL</span><h3>Mis contactos</h3><p>En Android: instala CALLE360 como aplicación desde Chrome. Después, en Contactos de Samsung, pulsa Compartir → Archivo vCard (VCF) → CALLE360. Si no aparece, actualiza o reinstala la PWA.</p></div><div class="personal-actions"><button type="button" class="personal-btn primary" id="pickPhoneContacts">＋ Elegir del teléfono</button><button type="button" class="personal-btn" id="chooseVcf">Importar archivo VCF</button><input type="file" id="vcfFile" accept=".vcf,text/vcard" hidden></div></div><div class="personal-import-status" id="personalImportStatus" role="status" aria-live="polite">La importación requiere tu selección. No se copia toda la agenda automáticamente.</div><label class="personal-search-label" for="personalContactSearch">Buscar en mis contactos</label><input id="personalContactSearch" class="personal-contact-search" type="search" placeholder="Nombre, teléfono o correo…"><div class="personal-contact-list" id="personalContactList"></div>';
+  panel.innerHTML='<div class="personal-panel-head"><div><span class="personal-eyebrow">AGENDA PERSONAL</span><h3>Mis contactos</h3><p>En Android, comparte una ficha desde Contactos de Samsung: Compartir → Archivo vCard (VCF) → CALLE360. Si CALLE360 no aparece, instala la PWA desde Chrome. Importa solo los contactos que elijas.</p></div><div class="personal-actions"><button type="button" class="personal-btn primary" id="pickPhoneContacts">Cómo importar desde Samsung</button><button type="button" class="personal-btn" id="chooseVcf">Importar archivo VCF</button><input type="file" id="vcfFile" accept=".vcf,text/vcard" hidden></div></div><div class="personal-import-status" id="personalImportStatus" role="status" aria-live="polite">La importación requiere tu selección. No se copia toda la agenda automáticamente.</div><label class="personal-search-label" for="personalContactSearch">Buscar en mis contactos</label><input id="personalContactSearch" class="personal-contact-search" type="search" placeholder="Nombre, teléfono o correo…"><div class="personal-contact-list" id="personalContactList"></div>';
   module.appendChild(panel);
   $('pickPhoneContacts').addEventListener('click',pickPhoneContacts);
   $('chooseVcf').addEventListener('click',()=>$('vcfFile').click());

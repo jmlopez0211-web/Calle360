@@ -28,7 +28,7 @@ test('PWA enlaza y cachea los módulos personales',()=>{
  assert.match(html,/src=["']\.\/personal\.js["']/);
  assert.match(sw,/personal\.css/);
  assert.match(sw,/personal\.js/);
- assert.match(sw,/calle360once-shell-v20/);
+ assert.match(sw,/calle360once-shell-v21/);
  assert.equal(manifest.lang,'es-ES');
  assert.equal(manifest.display,'standalone');
  assert.equal(manifest.share_target.method,'POST');
@@ -45,6 +45,10 @@ test('contactos: selector compatible, importación VCF y búsqueda local',()=>{
  assert.match(sw,/requestUrl\.pathname === shareAction\.pathname/);
  assert.match(personal,/Instala CALLE360 como aplicación desde Chrome/);
  assert.match(personal,/parseVcf/);
+ assert.match(personal,/contactPhoneKey/);
+ assert.match(personal,/isDamagedContactName/);
+ assert.match(personal,/_nameNeedsRefresh/);
+ assert.match(personal,/Cómo importar desde Samsung/);
  assert.match(personal,/personalContactSearch/);
  assert.match(personal,/data-create-point/);
  assert.match(personal,/data-plan-contact/);
@@ -59,7 +63,17 @@ test('Samsung vCard: decodifica Quoted-Printable UTF-8 y repara nombres guardado
  assert.equal(contacts[0].name,'Fernando Hurtado González');
  assert.equal(contacts[0].tel,'670317074');
  assert.match(personal,/repairStoredQuotedPrintableNames/);
- assert.match(personal,/El teléfono se ha conservado/);
+ assert.match(personal,/se conservarán los teléfonos/);
+});
+
+test('Samsung vCard: admite CR, CRLF y líneas Quoted-Printable partidas',()=>{
+ const parserSource=personal.slice(personal.indexOf('function decodeQuotedPrintable'),personal.indexOf('\nfunction normalize'));
+ const parseVcf=new Function(parserSource+'; return parseVcf;')();
+ const body='BEGIN:VCARD\rVERSION:2.1\rFN;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:=46=65=72=6E=61=6E=64=6F=20=48=75=72=74=61=64=6F=20=47=6F=6E=7A=\r=C3=A1=6C=65=7A\rN;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:=48=75=72=74=61=64=6F;=46=65=72=6E=61=6E=64=6F\rTEL;CELL:670317074\rEND:VCARD';
+ const contacts=parseVcf(body);
+ assert.equal(contacts.length,1);
+ assert.equal(contacts[0].name,'Fernando Hurtado González');
+ assert.equal(contacts[0].tel,'670317074');
 });
 
 test('mapa: ubicación del compañero y navegación se mantienen locales',()=>{
