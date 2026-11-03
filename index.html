@@ -1098,7 +1098,7 @@ let filter='todos';function apply(){const term=(search?.value||'').trim().toLoca
 filters.forEach(f=>f.addEventListener('click',()=>{filter=f.dataset.themeFilter;filters.forEach(x=>{const on=x===f;x.classList.toggle('is-active',on);x.setAttribute('aria-pressed',String(on));});apply();}));
 buttons.forEach(b=>b.addEventListener('click',()=>setTheme(b.dataset.themeChoice)));if(search)search.addEventListener('input',apply);
 document.getElementById('c360ThemeRandom').addEventListener('click',()=>{let pool=buttons.filter(b=>!b.hidden);if(!pool.length){filter='todos';filters.forEach(f=>{const on=f.dataset.themeFilter==='todos';f.classList.toggle('is-active',on);f.setAttribute('aria-pressed',String(on));});if(search)search.value='';apply();pool=buttons;}setTheme(pool[Math.floor(Math.random()*pool.length)].dataset.themeChoice);});
-let initial='alien';try{initial=localStorage.getItem('calle360_visual_theme')||'alien'}catch(e){}setTheme(initial,false);apply();
+let initial='minimal';try{initial=localStorage.getItem('calle360_visual_theme')||'minimal'}catch(e){}setTheme(initial,false);apply();
 })();
 </script>
 <script>
