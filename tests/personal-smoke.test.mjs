@@ -58,7 +58,8 @@ test('interfaz responsive y tema de centro de operaciones',()=>{
 test('los filtros de provincia, municipio y búsqueda ignoran tildes',()=>{
  assert.match(html,/function searchKey\(value\)/);
  assert.match(html,/normalize\('NFD'\)/);
- assert.match(html,/searchKey\(\[r\.town,r\.address\]/);
+ assert.match(html,/searchKey\(\[r\.town,r\.province,r\.address\]/);
+ assert.match(html,/Municipio o provincia/);
 });
 
 test('Málaga es el punto de partida y aparece primero en la guía',()=>{
