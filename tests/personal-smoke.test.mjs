@@ -132,3 +132,14 @@ test('marcador puede planificar una visita vinculada al compañero',()=>{
  assert.match(html,/data-show-colleague/);
  assert.match(html,/colleagueId:p\.id/);
 });
+
+
+test('Busca vendedores guardados antes de llamar a Nominatim',()=>{
+ assert.match(html,/localStore\.read\('points'\)/);
+ assert.match(html,/Vendedor encontrado en tus registros/);
+ assert.match(html,/Buscar vendedor guardado o lugar en el mapa/);
+});
+
+test('Los filtros no ocultan contactos antiguos sin municipio',()=>{
+ assert.match(html,/!r\.town&&!r\.address/);
+});
