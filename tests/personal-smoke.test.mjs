@@ -28,7 +28,7 @@ test('PWA enlaza y cachea los módulos personales',()=>{
  assert.match(html,/src=["']\.\/personal\.js["']/);
  assert.match(sw,/personal\.css/);
  assert.match(sw,/personal\.js/);
- assert.match(sw,/calle360once-shell-v24/);
+ assert.match(sw,/calle360once-shell-v25/);
  assert.equal(manifest.lang,'es-ES');
  assert.equal(manifest.display,'standalone');
  assert.equal(manifest.share_target.method,'POST');
