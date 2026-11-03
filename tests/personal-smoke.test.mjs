@@ -28,13 +28,20 @@ test('PWA enlaza y cachea los módulos personales',()=>{
  assert.match(html,/src=["']\.\/personal\.js["']/);
  assert.match(sw,/personal\.css/);
  assert.match(sw,/personal\.js/);
- assert.match(sw,/calle360once-shell-v18/);
+ assert.match(sw,/calle360once-shell-v19/);
  assert.equal(manifest.lang,'es-ES');
  assert.equal(manifest.display,'standalone');
+ assert.equal(manifest.share_target.method,'POST');
+ assert.equal(manifest.share_target.enctype,'multipart/form-data');
+ assert.deepEqual(manifest.share_target.params.files[0].accept,['text/vcard','.vcf']);
 });
 
 test('contactos: selector compatible, importación VCF y búsqueda local',()=>{
  assert.match(personal,/navigator\.contacts\.select/);
+ assert.match(personal,/handleSharedVCard/);
+ assert.match(personal,/takeSharedVCard/);
+ assert.match(sw,/request\.formData\(\)/);
+ assert.match(sw,/saveSharedVCard/);
  assert.match(personal,/parseVcf/);
  assert.match(personal,/personalContactSearch/);
  assert.match(personal,/data-create-point/);
