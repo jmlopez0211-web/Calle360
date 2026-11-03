@@ -1,0 +1,54 @@
+/* CALLE360 Personal: interfaz oscura estilo centro de operaciones */
+:root{--paper:#07111f;--ink:#e8f5ff;--muted:#91a9bf;--navy:#d9f0ff;--line:#173754;--teal:#00d7ef;--blue:#087ff5;--shadow:0 12px 30px rgba(0,0,0,.28)}
+html,body{background:#06101d!important;color:#e8f5ff!important}
+body{background:radial-gradient(ellipse at 50% -20%,#0c4260 0,transparent 46%),#06101d!important}
+.top,.brandrow,.leftnav,.mapcard,.card,.modulepage,.personal-panel,.future-strip{background:#0a192a!important;color:#e8f5ff!important;border-color:#173754!important}
+.top{box-shadow:0 8px 30px #0008!important}
+.brandtitle strong,.maphead strong,.cardhead strong,.modulepage h2,.modulepage h3{color:#e8f5ff!important}
+.brandtitle small,.modulepage p,.muted,.field label,.personal-contact-info small{color:#91a9bf!important}
+.logo{background:linear-gradient(135deg,#00d7ef,#087ff5)!important;color:#04101d!important}
+.modulebar button,.leftnav button,.provincechips button,.btn{background:#10253b!important;color:#cdeaff!important;border:1px solid #214969!important}
+.modulebar button.active,.leftnav button.active,.btn.primary{background:linear-gradient(120deg,#087ff5,#00b9d5)!important;color:white!important;border-color:#00d7ef!important}
+.layout{background:transparent!important}
+.mapcard,.card,.modulepage{box-shadow:0 12px 32px #0005!important;border:1px solid #1b4565!important}
+.maphead,.cardhead{background:linear-gradient(100deg,#0d2238,#0a192a)!important;border-color:#173754!important}
+.mapwrap{background:#061c31!important}
+#realMap{background:#071726}
+#realMap .leaflet-tile-pane img{filter:invert(1) hue-rotate(180deg) brightness(.72) contrast(1.12) saturate(.72)}
+.leaflet-control-zoom a,.leaflet-bar a{background:#0d2740!important;color:#d9f4ff!important;border-color:#245071!important}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#0d2238!important;color:#e8f5ff!important}
+.leaflet-popup-content a{color:#42d9ff!important}
+.field input,.field select,.field textarea,.formgrid input,.formgrid select,.formgrid textarea,.search{background:#081726!important;color:#e8f5ff!important;border:1px solid #214969!important}
+.field input::placeholder,.search input::placeholder{color:#7893aa!important}
+.result,.record,.agenda-row{border-color:#173754!important}
+.result:hover{background:#102941!important}
+.result b,.record b,.agenda-row b{color:#e8f5ff!important}
+.live,.intel-badge{background:#063e4b!important;color:#61f3ee!important}
+.future-strip{border-bottom:1px solid #1b4565!important}
+.personal-dashboard{display:flex;justify-content:space-between;align-items:center;gap:18px;margin:4px 0 12px;padding:15px 18px;border:1px solid #1b5b83;border-radius:15px;background:linear-gradient(110deg,#0b2943,#0b1b30 58%,#07364a);box-shadow:0 10px 30px #0004}
+.personal-dash-title{display:grid;gap:4px}
+.personal-dash-title strong{font-size:18px;color:#f1fbff;letter-spacing:.2px}
+.personal-dash-title small{font-size:11px;color:#9ab5ca}
+.personal-eyebrow{font-size:9px;letter-spacing:1.6px;font-weight:900;color:#39d9ed}
+.personal-dash-metrics{display:flex;gap:9px}
+.personal-dash-metrics div{min-width:78px;padding:8px 12px;border:1px solid #1c5476;border-radius:10px;background:#071a2a;text-align:center}
+.personal-dash-metrics b{display:block;color:#50e4ff;font-size:21px}
+.personal-dash-metrics span{display:block;color:#a3bdd0;font-size:9px;text-transform:uppercase;letter-spacing:.7px}
+.personal-panel{margin-top:18px;padding:15px;border:1px solid #1b4565;border-radius:14px;background:#0a192a;box-shadow:0 10px 25px #0004}
+.personal-panel-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:12px}
+.personal-panel h3{margin:3px 0;color:#eaf8ff;font-size:17px}
+.personal-panel p{margin:3px 0;color:#91a9bf;font-size:11px}
+.personal-actions,.personal-contact-actions{display:flex;flex-wrap:wrap;gap:7px}
+.personal-btn{border:1px solid #285575;background:#102a42;color:#d9f4ff;border-radius:8px;padding:9px 12px;font-size:11px;font-weight:800;cursor:pointer}
+.personal-btn.primary{background:linear-gradient(120deg,#087ff5,#00b9d5);border-color:#00d7ef;color:white}
+.personal-import-status{padding:9px 11px;border-radius:8px;background:#071c2c;color:#8fb6cc;font-size:10px;margin-bottom:10px}
+.personal-contact-list{display:grid;gap:7px}
+.personal-contact{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #173d5a;border-radius:10px;background:#0b2033}
+.personal-avatar{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(135deg,#087ff5,#00b9d5);color:white;font-weight:900}
+.personal-contact-info{display:grid;gap:3px;min-width:0;flex:1}
+.personal-contact-info strong{font-size:12px;color:#eaf8ff}
+.personal-contact-info small{font-size:10px;overflow-wrap:anywhere}
+.personal-empty{padding:18px;text-align:center;border:1px dashed #285575;border-radius:10px;color:#91a9bf;font-size:11px}
+.personal-map-pick{cursor:crosshair!important;outline:3px solid #00d7ef;outline-offset:-3px}
+@media(max-width:850px){.personal-dashboard{align-items:flex-start;flex-direction:column}.personal-dash-metrics{width:100%}.personal-dash-metrics div{flex:1}.personal-panel-head{align-items:flex-start;flex-direction:column}}
+@media(max-width:560px){.personal-dash-title strong{font-size:16px}.personal-contact{align-items:flex-start;flex-wrap:wrap}.personal-contact-info{min-width:calc(100% - 55px)}.personal-contact-actions{width:100%;padding-left:44px}.personal-contact-actions button{flex:1}}
