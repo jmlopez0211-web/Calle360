@@ -57,7 +57,7 @@ function importContacts(items,source){
 
 async function pickPhoneContacts(){
   if(!navigator.contacts||typeof navigator.contacts.select!=='function'){
-    status('En Android, abre Contactos, selecciona uno o varios contactos y pulsa Compartir > CALLE360. También puedes importar un archivo VCF.');return;
+    status('Este navegador no ofrece selector directo de agenda. Instala CALLE360 como aplicación desde Chrome (no solo acceso directo); después, en Contactos de Samsung, elige Compartir > Archivo vCard (VCF) > CALLE360. Si no aparece, actualiza o reinstala la PWA.');return;
   }
   try{
     const chosen=await navigator.contacts.select(['name','tel','email','address'],{multiple:true});
@@ -115,7 +115,7 @@ function ensurePanel(){
   const page=$('page-contactos'),module=page&&page.querySelector('.modulepage');
   if(!module||$('personalContactsPanel'))return;
   const panel=document.createElement('section');panel.id='personalContactsPanel';panel.className='personal-panel';
-  panel.innerHTML='<div class="personal-panel-head"><div><span class="personal-eyebrow">AGENDA PERSONAL</span><h3>Mis contactos</h3><p>En Android: abre Contactos, selecciona una ficha y pulsa Compartir → CALLE360. También puedes importar un archivo VCF.</p></div><div class="personal-actions"><button type="button" class="personal-btn primary" id="pickPhoneContacts">＋ Elegir del teléfono</button><button type="button" class="personal-btn" id="chooseVcf">Importar archivo VCF</button><input type="file" id="vcfFile" accept=".vcf,text/vcard" hidden></div></div><div class="personal-import-status" id="personalImportStatus" role="status" aria-live="polite">La importación requiere tu selección. No se copia toda la agenda automáticamente.</div><label class="personal-search-label" for="personalContactSearch">Buscar en mis contactos</label><input id="personalContactSearch" class="personal-contact-search" type="search" placeholder="Nombre, teléfono o correo…"><div class="personal-contact-list" id="personalContactList"></div>';
+  panel.innerHTML='<div class="personal-panel-head"><div><span class="personal-eyebrow">AGENDA PERSONAL</span><h3>Mis contactos</h3><p>En Android: instala CALLE360 como aplicación desde Chrome. Después, en Contactos de Samsung, pulsa Compartir → Archivo vCard (VCF) → CALLE360. Si no aparece, actualiza o reinstala la PWA.</p></div><div class="personal-actions"><button type="button" class="personal-btn primary" id="pickPhoneContacts">＋ Elegir del teléfono</button><button type="button" class="personal-btn" id="chooseVcf">Importar archivo VCF</button><input type="file" id="vcfFile" accept=".vcf,text/vcard" hidden></div></div><div class="personal-import-status" id="personalImportStatus" role="status" aria-live="polite">La importación requiere tu selección. No se copia toda la agenda automáticamente.</div><label class="personal-search-label" for="personalContactSearch">Buscar en mis contactos</label><input id="personalContactSearch" class="personal-contact-search" type="search" placeholder="Nombre, teléfono o correo…"><div class="personal-contact-list" id="personalContactList"></div>';
   module.appendChild(panel);
   $('pickPhoneContacts').addEventListener('click',pickPhoneContacts);
   $('chooseVcf').addEventListener('click',()=>$('vcfFile').click());
